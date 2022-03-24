@@ -5,7 +5,7 @@
 package dao
 
 import (
-	"github.com/gogf/template-single/internal/service/internal/dao/internal"
+	"github.com/xingrgx/WeShareX/internal/service/internal/dao/internal"
 )
 
 // userDao is the data access object for table wsx_user.

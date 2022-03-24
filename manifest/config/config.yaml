@@ -1,8 +1,19 @@
+# 服务器配置
 server:
-  address:     ":8000"
+  address:     ":8585"
+  dumpRouterMap:       true
+  routeOverWrite:      true
+  accessLogEnabled:    true
   openapiPath: "/api.json"
   swaggerPath: "/swagger"
 
+# 数据库连接配置
+database:
+  default:
+    type:  "mysql"
+    link:  "root:123456@tcp(127.0.0.1:3306)/we_sharex"
+
+# 日志管理配置
 logger:
   level : "all"
   stdout: true
