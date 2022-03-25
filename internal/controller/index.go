@@ -13,7 +13,6 @@ var Index = cIndex{}
 
 func (i *cIndex) Index(ctx context.Context, req *v1.IndexReq) (res v1.IndexRes, err error) {
 	r := g.RequestFromCtx(ctx)
-	r.GetView().Assign("tplMain", "index/include/main.html")
-	_ = r.Response.WriteTpl("index/index.html")
+	r.Response.WriteTpl("index/index.html")
 	return
 }
