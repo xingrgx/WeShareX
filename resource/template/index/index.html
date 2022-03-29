@@ -1,11 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>首页</title>
+    <!-- 借助模板引擎导入 header -->
+    {{include "index/header.html" .}}
 </head>
 <body>
-    <a href="/login">登录</a>
+<div>
+    {{include "index/navbar.html" .}}
+    <main>
+        {{include .MainTpl .}}
+    </main>
+    {{include "index/footer.html" .}}
+</div>
 </body>
 </html>

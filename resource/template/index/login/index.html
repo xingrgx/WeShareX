@@ -1,18 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    {{include .tplLoginFailed .}}
-    {{include .tplLoginSuccess .}}
-    <form action="/login" method="post">
-        用户名：<input type="text" name="username"></input><br>
+<div align="center">
+    <form id="loginForm" action="/login" method="post">
+        用户名：<input type="text" name="passport"></input><br>
         密码：<input type="password" name="password"> <br>
         <input type="submit" value="登录"></input>
     </form>
-</body>
-</html>
+</div>
+
+<script type="text/javascript">
+jQuery(function($) {
+    $('#loginForm').validate({
+        submitHandler: function(form) {
+            $('button[type=submit]').attr('disabled', 'true');
+
+            let passport = $('[name="passport"]').val();
+            let password = $('[name="password"]').val();
+            jQuery(form).ajaxSubmit({
+                dataType: 'json',
+                success:  function (r, textStatus) {
+                    if (r.code <= 0) {
+                        swal({
+                            title:   "登录成功",
+                            text:    "页面将自动跳转到登录前页面",
+                            icon:    "success",
+                            timer:   2000,
+                            buttons: false
+                        }).then((value) => {
+                            if (r.redirect != "") {
+                                window.location.href = r.redirect;
+                            } else {
+                                window.location.href = "/";
+                            }
+                        });
+                    } else {
+                        swal({
+                            text:   r.message,
+                            icon:   "warning",
+                            button: "确定",
+                        });
+                        $('[name="password"]').val('');
+                    }
+                }
+            });
+        }
+    })
+})
+</script>
