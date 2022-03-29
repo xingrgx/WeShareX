@@ -46,3 +46,8 @@ func (s *sUser) GetUserByPassportAndPassword(ctx context.Context, passport, pass
 	}).Scan(&user)
 	return
 }
+
+// Logout 用户注销登录
+func (s *sUser) Logout(ctx context.Context) error {
+	return Session().RemoveUser(ctx)
+}

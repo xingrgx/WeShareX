@@ -25,6 +25,7 @@ var (
 				group.Bind(
 					controller.Index,
 					controller.Login, // 登录
+					controller.User,
 				)
 			})
 			s.Run()
