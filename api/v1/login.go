@@ -23,5 +23,5 @@ type LoginReq struct {
 
 // LoginRes 登录页面的登录响应
 type LoginRes struct {
-	g.Meta `mime:"text/html" example:"string"`
+	Referer string `json:"referer" dc:"引导客户端跳转地址"`
 }

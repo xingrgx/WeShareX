@@ -5,10 +5,23 @@
 <a href="/categories">分类</a>
 <a href="/room">聊天室</a>
 
-<div align="right">
-    <a href="/register" >注册</a>
-    <a href="/login" >登录</a>
-</div>
-
+{{if .Context.User}}
+    <div align="right">
+        <a href="/upload">上传资源</a>
+        <div>
+            <ul>
+                <li><a href="/user/{{.Context.User.Id}}">头像{{.Context.User.Passport}}</a></li>
+                <li><a href="/user/{{.Context.User.Id}}">个人中心</a></li>
+                <li><a href="/user/setting">账号设置</a></li>
+                <li><a href="/user/logout">退出登录</a></li>
+            </ul>
+        </div>
+    </div>
+{{else}}
+    <div align="right">
+        <a href="/register" >注册</a>
+        <a href="/login" >登录</a>
+    </div>
+{{end}}
 </h2>
 </div>

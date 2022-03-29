@@ -1,6 +1,7 @@
 # 服务器配置
 server:
   address:     ":8585"
+  serverRoot:          "resource/public"
   dumpRouterMap:       true
   routeOverWrite:      true
   accessLogEnabled:    true
@@ -17,6 +18,15 @@ database:
 logger:
   level : "all"
   stdout: true
+  path:    "logs/default"
+  ctxKeys: ["RequestId"]
 
+# 模板引擎配置
+viewer:
+  indexLayout: index/index.html
+
+# 网站内容配置
+setting:
+  title: "WeShareX分享你想分享的！"
 
 
