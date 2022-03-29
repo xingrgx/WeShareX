@@ -6,12 +6,20 @@ package do
 
 import (
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gtime"
 )
 
 // User is the golang structure of table wsx_user for DAO operations like Where/Data.
 type User struct {
-	g.Meta   `orm:"table:wsx_user, do:true"`
-	Id       interface{} // UID
-	Passport interface{} // 账号
-	Password interface{} // 密码
+	g.Meta    `orm:"table:wsx_user, do:true"`
+	Id        interface{} // 用户ID
+	Passport  interface{} // 账号
+	Password  interface{} // 密码
+	Nickname  interface{} // 昵称
+	Email     interface{} // 邮箱
+	Avatar    interface{} // 头像图床地址
+	Status    interface{} // 状态（0:启用 1:禁用）
+	Gender    interface{} // 性别（0:未设置 1:男 2:女）
+	CreatedAt *gtime.Time // 注册时间
+	UpdateAt  *gtime.Time // 更新时间
 }
