@@ -1,0 +1,46 @@
+<div align="center">
+    <form id="registerForm" action="/register" method="POST">
+        用户名：<input type="text" name="passport"><br>
+        昵称：<input type="text" name="nickname"><br>
+        密码：<input type="password" name="password"><br>
+        确认密码：<br>
+        邮箱：<input tpye="text" name="email"><br>
+        <button type="submit">注册</button>
+    </form>
+</div>
+
+<script type="text/javascript">
+    jQuery(function($) {
+        $('#registerForm').validate({
+            submitHandler: function(form) {
+                $('button[type=submit]').attr('disabled', 'true');
+                jQuery(form).ajaxSubmit({
+                    dataType: 'json',
+                    success:  function (r, textStatus) {
+                        if (r.code <= 0) {
+                            swal({
+                                title:   "注册成功",
+                                text:    "页面将自动跳转到登录页面",
+                                icon:    "success",
+                                timer:   2000,
+                                buttons: false
+                            }).then((value) => {
+                                if (r.redirect != "") {
+                                    window.location.href = r.redirect;
+                                } else {
+                                    window.location.href = "/login";
+                                }
+                            });
+                        } else {
+                            swal({
+                                text:   r.message,
+                                icon:   "warning",
+                                button: "确定",
+                            });
+                        }
+                    }
+                });
+            }
+        })
+    })
+    </script>

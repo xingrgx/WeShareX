@@ -26,6 +26,7 @@ var (
 					controller.Index,
 					controller.Login, // 登录
 					controller.User,
+					controller.Register,
 				)
 			})
 			s.Run()
