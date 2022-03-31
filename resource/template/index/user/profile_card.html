@@ -1,0 +1,9 @@
+<div align="center">
+    <div>资料卡</div><br>
+    <a href="/user/{{.Data.Id}}">
+        <img src="{{.Data.Avatar}}" height="85" width="85">
+    </a><br>
+    昵称：{{.Data.Nickname}}<br>
+    性别：{{.BuildIn.Gender .Data.Gender}}<br>
+    <button>加好友/发消息</button><br>
+</div>

@@ -83,3 +83,17 @@ func (su *sUser) CheckPassportExist(ctx context.Context, passport string) error 
 	}
 	return nil
 }
+
+// GetUserProfileByID 根据UID获取用户信息
+func (su *sUser) GetUserProfileByID(ctx context.Context, userId uint) (user *model.UserProfileOutput, err error) {
+	err = dao.User.Ctx(ctx).WherePri(userId).Scan(&user)
+	// 查询失败
+	if err != nil {
+		return nil, err
+	}
+	// 查无此人
+	if user == nil {
+		return nil, nil
+	}
+	return
+}

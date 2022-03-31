@@ -13,3 +13,11 @@ type UserRegisterInput struct {
 	Nickname string // 昵称
 	Email    string // 邮箱地址
 }
+
+// UserProfileOutput 用户个人展示的信息
+type UserProfileOutput struct {
+	Id       uint   // UID
+	Nickname string // 昵称
+	Avatar   string // 头像地址
+	Gender   int    // 性别（0:未设置；1:男；2:女）
+}

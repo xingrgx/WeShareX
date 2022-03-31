@@ -11,3 +11,14 @@ type UserLogoutReq struct {
 type UserLogoutRes struct {
 	g.Meta `mime:"text/html" type:"string" example:"<html/>"`
 }
+
+// UserHomeReq 用户个人主页请求
+type UserHomeReq struct {
+	g.Meta `path:"/user/{UserId}" method:"get" summary:"显示用户个人主页" tags:"个人"`
+	UserId uint `json:"userId" in:"path" dc:"用户ID"`
+}
+
+// UserHomeRes 用户个人主页响应
+type UserHomeRes struct {
+	g.Meta `mime:"text/html" type:"string" example:"<html/>"`
+}

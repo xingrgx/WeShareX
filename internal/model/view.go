@@ -5,4 +5,5 @@ type View struct {
 	Error    string
 	MainTpl  string
 	Redirect string
+	Data     interface{}
 }
