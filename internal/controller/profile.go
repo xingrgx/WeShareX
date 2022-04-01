@@ -12,8 +12,8 @@ type cProfile struct{}
 
 var Profile cProfile
 
-// Index 控制展示个人信息修改页面
-func (cp *cProfile) Index(ctx context.Context, req *v1.IndexUpdateProfileReq) (res *v1.IndexUpdateProfileRes, err error) {
+// IndexProfile 控制展示个人信息修改页面
+func (cp *cProfile) IndexProfile(ctx context.Context, req *v1.IndexUpdateProfileReq) (res *v1.IndexUpdateProfileRes, err error) {
 	uid := service.Context().Get(ctx).User.Id
 	userPrf, err := service.User().GetUserProfileByID(ctx, uid)
 	if err != nil {
