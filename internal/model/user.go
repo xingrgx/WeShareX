@@ -28,3 +28,9 @@ type UserProfileInput struct {
 	Nickname string // 昵称
 	Gender   int    // 性别（0:未设置；1:男；2:女）
 }
+
+// UserPasswordInput 用户的新旧密码输入
+type UserPasswordInput struct {
+	OldPassword string
+	NewPassword string
+}

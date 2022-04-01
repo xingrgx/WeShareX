@@ -115,3 +115,28 @@ func (su *sUser) UpdateProfileById(ctx context.Context, input model.UserProfileI
 		return err
 	})
 }
+
+// UpdatePWD 用户修改密码服务
+func (su *sUser) UpdatePWD(ctx context.Context, input model.UserPasswordInput) error {
+	return dao.User.Transaction(ctx, func(ctx context.Context, tx *gdb.TX) error {
+		uid := Context().Get(ctx).User.Id
+		n, err := dao.User.Ctx(ctx).
+		Where(dao.User.Columns().Password, input.OldPassword).
+		Where(dao.User.Columns().Id, uid).Count()
+		// 查询失败
+		if err != nil {
+			return err
+		}
+		// 查无此项
+		if n == 0 {
+			return gerror.New("原始密码错误！请重试")
+		}
+		_, err = dao.User.Ctx(ctx).Data(g.Map{
+			dao.User.Columns().Password: input.NewPassword,
+		}).Where(dao.User.Columns().Id, uid).Update()
+		if err == nil {
+			err = Session().RemoveUser(ctx)
+		}
+		return err
+	})
+}

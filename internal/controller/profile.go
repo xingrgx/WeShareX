@@ -37,3 +37,20 @@ func (cp *cProfile) UpdateProfile(ctx context.Context, req *v1.UpdateProfileReq)
 	})
 	return
 }
+
+// IndexChangePWD 控制展示更改密码页面
+func (cp *cProfile) IndexUpdatePWD(ctx context.Context, req *v1.IndexUpdatePWDReq) (res *v1.IndexUpdatePWDRes, err error) {
+	service.View().Render(ctx, model.View{
+		Title: "修改密码",
+	})
+	return
+}
+
+// UpdatePWD 控制修改密码
+func (cp *cProfile) UpdatePWD(ctx context.Context, req *v1.UpdatePWDReq) (res *v1.UpdatePWDRes, err error) {
+	err = service.User().UpdatePWD(ctx, model.UserPasswordInput {
+		OldPassword: req.OldPassword,
+		NewPassword: req.NewPassword,
+	})
+	return
+}
