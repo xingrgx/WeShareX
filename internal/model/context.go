@@ -16,4 +16,6 @@ type Context struct {
 type ContextUser struct {
 	Id       uint   // 用户ID
 	Passport string // 用户账号
+	Nickname string // 昵称
+	Avatar   string // 头像
 }

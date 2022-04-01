@@ -97,3 +97,21 @@ func (su *sUser) GetUserProfileByID(ctx context.Context, userId uint) (user *mod
 	}
 	return
 }
+
+// UpdateProfileById 根据 UID 更新用户基本信息
+func (su *sUser) UpdateProfileById(ctx context.Context, input model.UserProfileInput) error {
+	return dao.User.Transaction(ctx, func(ctx context.Context, tx *gdb.TX) error {
+		// 获取上下文中的 UserId
+		user := Context().Get(ctx).User
+		userId := user.Id
+		_, err := dao.User.Ctx(ctx).OmitEmpty().Data(input).Where(dao.User.Columns().Id, userId).Update()
+		// 如果数据库更新成功，则更新session user 的信息
+		if err == nil {
+			sessionUser := Session().GetUser(ctx)
+			sessionUser.Nickname = input.Nickname
+			sessionUser.Gender = input.Gender
+			err = Session().SetUser(ctx, sessionUser)
+		}
+		return err
+	})
+}

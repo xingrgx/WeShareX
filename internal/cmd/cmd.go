@@ -27,6 +27,7 @@ var (
 					controller.Login, // 登录
 					controller.User,
 					controller.Register,
+					controller.Profile,
 				)
 			})
 			s.Run()

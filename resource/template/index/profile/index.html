@@ -1,0 +1,70 @@
+
+
+{{include "index/profile/menu.html"}}
+
+<div style="background-color:#00ff2a;">
+    <h3> 用户个人基本资料修改页面 </h3>
+</div>
+
+<div align="center">
+    <form id="profileForm" method="POST" action="/profile">
+        账号：<input type="text" readonly value="{{.Context.User.Passport}}"><br>
+        昵称：<input type="text" name="nickname" value="{{.Data.Nickname}}"><br>
+        性别：未知：<input type="radio" name="gender" {{if eq .Data.Gender 0}}checked{{end}} id="gender0" value="0"><br>
+        男：<input type="radio" name="gender" {{if eq .Data.Gender 1}}checked{{end}} id="gender1" value="1"><br>
+        女：<input type="radio" name="gender" {{if eq .Data.Gender 2}}checked{{end}} id="gender2" value="2"><br>
+        <button type="submit">保存</button>
+    </form>
+</div>
+
+<script>
+    jQuery(function ($) {
+
+        $("#user-profile").addClass("active")
+
+        $('#profileForm').validate({
+            errorElement: 'div',
+            errorClass: 'validation-error-block',
+            focusInvalid: true,
+            rules: {
+            },
+            messages: {
+                nickname: {
+                    required: "请输入昵称"
+                },
+            },
+            submitHandler: function (form) {
+                $('button[type=submit]').attr('disabled', 'true');
+                // 传输加密
+
+                jQuery(form).ajaxSubmit({
+                    dataType: 'json',
+                    success: function (r, textStatus) {
+                        if (r.code <= 0) {
+                            swal({
+                                text: "修改成功",
+                                icon: "success",
+                                button: "确定"
+                            }).then((value) => {
+                                window.location.href = "/profile";
+                            });
+                        } else {
+                            if (r.message != "") {
+                                swal({
+                                    text: r.message,
+                                    icon: "warning",
+                                    button: "确定"
+                                });
+                            }
+                        }
+                    }
+                });
+                $('button[type=submit]').removeAttr('disabled');
+            },
+            errorPlacement: function (error, element) {
+                element.addClass("is-invalid")
+                error.appendTo(element.parent());
+            }
+        });
+    });
+</script>
