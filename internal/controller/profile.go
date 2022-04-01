@@ -28,6 +28,7 @@ func (cp *cProfile) IndexProfile(ctx context.Context, req *v1.IndexUpdateProfile
 	}
 }
 
+// UpdateProfile 控制更新用户基本信息
 func (cp *cProfile) UpdateProfile(ctx context.Context, req *v1.UpdateProfileReq) (res *v1.UpdateProfileRes, err error) {
 	err = service.User().UpdateProfileById(ctx, model.UserProfileInput {
 		Id: req.Id,
