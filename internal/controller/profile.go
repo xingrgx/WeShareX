@@ -54,3 +54,17 @@ func (cp *cProfile) UpdatePWD(ctx context.Context, req *v1.UpdatePWDReq) (res *v
 	})
 	return
 }
+
+// IndexUpdateEmail 控制跳转至更改邮箱页面
+func (cp *cProfile) IndexUpdateEmail(ctx context.Context, req *v1.IndexUpdateEmailReq) (res *v1.IndexUpdateEmailRes, err error) {
+	service.View().Render(ctx, model.View{
+		Title: "更改邮箱",
+	})
+	return
+}
+
+// UpdateEmail 控制更改邮箱
+func (cp *cProfile) UpdateEmail(ctx context.Context, req *v1.UpdateEmailReq) (res *v1.UpdateEmailRes, err error) {
+	err = service.User().UpdateEmail(ctx, req.NewEmail)
+	return
+}

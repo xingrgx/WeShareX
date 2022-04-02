@@ -36,6 +36,9 @@ func (su *sUser) Login(ctx context.Context, in model.UserLoginInput) error {
 	Context().SetUser(ctx, &model.ContextUser{
 		Id:       userEntity.Id,
 		Passport: userEntity.Passport,
+		Nickname: userEntity.Nickname,
+		Avatar: userEntity.Avatar,
+		Email: userEntity.Email,
 	})
 	return nil
 }
@@ -136,6 +139,21 @@ func (su *sUser) UpdatePWD(ctx context.Context, input model.UserPasswordInput) e
 		}).Where(dao.User.Columns().Id, uid).Update()
 		if err == nil {
 			err = Session().RemoveUser(ctx)
+		}
+		return err
+	})
+}
+
+// UpdateEmail 用户更改邮箱服务
+func (su *sUser) UpdateEmail(ctx context.Context, newEmail string) error {
+	return dao.User.Transaction(ctx, func(ctx context.Context, tx *gdb.TX) error {
+		uid := Context().Get(ctx).User.Id
+		_, err := dao.User.Ctx(ctx).Data("email", newEmail).
+		Where(dao.User.Columns().Id, uid).Update()
+		if err == nil {
+			sessionUser := Session().GetUser(ctx)
+			sessionUser.Email = newEmail
+			err = Session().SetUser(ctx, sessionUser)
 		}
 		return err
 	})

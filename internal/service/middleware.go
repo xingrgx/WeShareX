@@ -65,6 +65,9 @@ func (s *sMiddleware) Ctx(r *ghttp.Request) {
 		customCtx.User = &model.ContextUser{
 			Id:       userEntity.Id,
 			Passport: userEntity.Passport,
+			Nickname: userEntity.Nickname,
+			Avatar: userEntity.Avatar,
+			Email: userEntity.Email,
 		}
 	}
 	// 将自定义的上下文对象传递到模板变量中使用

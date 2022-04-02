@@ -18,4 +18,5 @@ type ContextUser struct {
 	Passport string // 用户账号
 	Nickname string // 昵称
 	Avatar   string // 头像
+	Email    string // 邮箱
 }

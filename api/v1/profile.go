@@ -47,3 +47,24 @@ type UpdatePWDReq struct {
 type UpdatePWDRes struct {
 
 }
+
+// IndexUpdateEmailReq 跳转至更改邮箱页面的请求接口
+type IndexUpdateEmailReq struct {
+	g.Meta `path:"/profile/email" method:"get" summary:"展示更改邮箱页面" tags:"个人"`
+}
+
+// IndexUpdateEmailRes 跳转至更改邮箱页面的响应接口
+type IndexUpdateEmailRes struct {
+	g.Meta `mime:"text/html" type:"string" example:"<html/>"`
+}
+
+// UpdateEmailReq 更改邮箱的请求接口
+type UpdateEmailReq struct {
+	g.Meta `path:"/profile/email" method:"post" summary:"更改邮箱" tags:"个人"`
+	NewEmail string `json:"newEmail" dc:"新邮箱"`
+}
+
+// UpdateEmailRes 更改邮箱的响应接口
+type UpdateEmailRes struct {
+
+}

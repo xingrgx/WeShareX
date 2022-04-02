@@ -6,7 +6,55 @@
 </div>
 
 <div align="center">
-    新邮箱：<input type="text" name="newEmail"></input>
-    验证码：<input type="text" name="verifyCode"></input>
-    <button type="submit">确认</button>
+    <form id="emailForm" method="POST" action="/profile/email">
+        邮箱地址：<input type="text" readonly value="{{.Context.User.Email}}"></input><br>
+        新邮箱：<input type="text" name="newEmail"></input><br>
+        验证码：<input type="text" name="verifyCode"></input><br>
+        <button type="submit">确认</button>
+    </form>
 </div>
+
+<script>
+    jQuery(function ($) {
+
+        $('#emailForm').validate({
+            errorElement: 'div',
+            errorClass: 'validation-error-block',
+            focusInvalid: true,
+            rules: {
+            },
+            submitHandler: function (form) {
+                $('button[type=submit]').attr('disabled', 'true');
+                // 传输加密
+
+                jQuery(form).ajaxSubmit({
+                    dataType: 'json',
+                    success: function (r, textStatus) {
+                        if (r.code <= 0) {
+                            swal({
+                                text: "修改成功",
+                                icon: "success",
+                                button: "确定"
+                            }).then((value) => {
+                                window.location.href = "/profile/email";
+                            });
+                        } else {
+                            if (r.message != "") {
+                                swal({
+                                    text: r.message,
+                                    icon: "warning",
+                                    button: "确定"
+                                });
+                            }
+                        }
+                    }
+                });
+                $('button[type=submit]').removeAttr('disabled');
+            },
+            errorPlacement: function (error, element) {
+                element.addClass("is-invalid")
+                error.appendTo(element.parent());
+            }
+        });
+    });
+</script>
