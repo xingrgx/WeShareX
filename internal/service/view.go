@@ -23,17 +23,18 @@ func (s *sView) RenderTpl(ctx context.Context, tpl string, data ...model.View) {
 		request  = g.RequestFromCtx(ctx)
 		viewObj  = model.View{}
 		viewData = make(g.Map)
-		stTitle  = g.Cfg().MustGet(ctx, `setting.title`).String()
+		defaultTitle  = g.Cfg().MustGet(ctx, `setting.title`).String()
 	)
 	// 获取前端传来的页面信息中的第一个
 	if len(data) > 0 {
 		viewObj = data[0]
 	}
 	if viewObj.Title == "" {
-		viewObj.Title = stTitle
+		viewObj.Title = defaultTitle
 	} else {
-		viewObj.Title = viewObj.Title + " | " + stTitle
+		viewObj.Title = viewObj.Title + " | " + defaultTitle
 	}
+	// 将对象viewObj转换为map类型的viewData
 	viewData = gconv.Map(viewObj)
 	for k, v := range viewData {
 		if g.IsEmpty(v) {
@@ -54,7 +55,7 @@ func (s *sView) Render(ctx context.Context, data ...model.View) {
 	s.RenderTpl(ctx, g.Cfg().MustGet(ctx, `viewer.indexLayout`).String(), data...)
 }
 
-// 获取视图存储目录
+// 获取视图存储目录 viewer.indexLayout="index/index.html" 所以返回值为 "index"
 func (s *sView) getViewFolderName(ctx context.Context) string {
 	return gstr.Split(g.Cfg().MustGet(ctx, "viewer.indexLayout").String(), "/")[0]
 }
