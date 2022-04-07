@@ -12,9 +12,8 @@ type cIndex struct{}
 
 var Index = cIndex{}
 
+// Index 控制展示首页
 func (i *cIndex) Index(ctx context.Context, req *v1.IndexReq) (res v1.IndexRes, err error) {
-	//r := g.RequestFromCtx(ctx)
-	//r.Response.WriteTpl("index/index.html")
 	service.View().Render(ctx, model.View{
 		Title: "首页",
 	})
