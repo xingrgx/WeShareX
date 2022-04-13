@@ -79,7 +79,7 @@ func (su *sUser) Register(ctx context.Context, in model.UserRegisterInput) error
 func (su *sUser) CheckPassportExist(ctx context.Context, passport string) error {
 	n, err := dao.User.Ctx(ctx).Where(dao.User.Columns().Passport, passport).Count()
 	if err != nil {
-		return nil
+		return err
 	}
 	if n > 0 {
 		return gerror.Newf("您和账号 %s 无缘，换个新的吧~", passport)
