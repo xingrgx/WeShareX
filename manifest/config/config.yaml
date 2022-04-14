@@ -8,6 +8,7 @@ server:
   openapiPath: "/api.json"
   swaggerPath: "/swagger"
   filePath: "files"
+  clientMaxBodySize: "1024m"
 
 # 数据库连接配置
 database:
