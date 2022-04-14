@@ -7,6 +7,7 @@ server:
   accessLogEnabled:    true
   openapiPath: "/api.json"
   swaggerPath: "/swagger"
+  filePath: "files"
 
 # 数据库连接配置
 database:

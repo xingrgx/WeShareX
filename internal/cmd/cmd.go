@@ -28,6 +28,7 @@ var (
 					controller.User,
 					controller.Register,
 					controller.Profile,
+					controller.File,
 				)
 			})
 			s.Run()

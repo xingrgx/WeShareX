@@ -21,3 +21,4 @@ manifest/output/
 temp/
 logs/
 *.exe
+files
