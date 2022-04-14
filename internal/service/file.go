@@ -31,7 +31,7 @@ func (sf *sFile) UploadFile(ctx context.Context, fileInput model.FileUploadInput
 			return err
 		}
 		// 检测文件是否已存在
-		if err := sf.CheckFileNameExist(ctx, fileInput.Name, fileInput.UserId); err != nil {
+		if err := sf.CheckFileNameExist(ctx, fileInput.Name, fileInput.UserId, fileInput.Path); err != nil {
 			return err
 		}
 		_, err := dao.File.Ctx(ctx).Data(file).OmitEmpty().Save()
@@ -39,11 +39,12 @@ func (sf *sFile) UploadFile(ctx context.Context, fileInput model.FileUploadInput
 	})
 }
 
-// CheckFileNameExist 检查文件名是否存在，检测规则：文件名+用户ID（+当前路径）
-func (sf *sFile) CheckFileNameExist(ctx context.Context, filename string, userId uint) error {
+// CheckFileNameExist 检查文件名是否存在，检测规则：Filename+UserID+Path
+func (sf *sFile) CheckFileNameExist(ctx context.Context, filename string, userId uint, path string) error {
 	n, err := dao.File.Ctx(ctx).Where(g.Map{
 		dao.File.Columns().Name:   filename,
 		dao.File.Columns().UserId: userId,
+		dao.File.Columns().Path: path,
 	}).Count()
 	if err != nil {
 		return err

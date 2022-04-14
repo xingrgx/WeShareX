@@ -23,7 +23,7 @@ func Test_GetFileRelativePath(t *testing.T) {
 
 func Test_CheckFileNameExist(t *testing.T) {
 	gtest.C(t, func(t *gtest.T) {
-		err := service.File().CheckFileNameExist(ctx, "goa.mod", 1)
+		err := service.File().CheckFileNameExist(ctx, "1.jpg", 1, "/hello/1.jpg")
 		t.Assert(err, nil)
 	})
 }
