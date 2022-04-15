@@ -4,13 +4,13 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 )
 
-// IndexUploadReq 展示上传文件页面的请求
-type IndexUploadReq struct {
+// IndexFilesReq 展示上传文件页面的请求
+type IndexFilesReq struct {
 	g.Meta `path:"/file" method:"get" summary:"展示上传页面" tags:"文件"`
 }
 
-// IndexUploadRes 展示上传文件页面的响应
-type IndexUploadRes struct {
+// IndexFilesRes 展示上传文件页面的响应
+type IndexFilesRes struct {
 	g.Meta `mime:"text/html" type:"string" example:"<html/>"`
 }
 

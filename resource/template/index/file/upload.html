@@ -1,0 +1,58 @@
+<input type="file" name="file" id="file" multiple="multiple"/>
+    <input type="hidden" name="currentPath" id="currentPath" value="root"></input>
+    <button id="uploadFileBtn">上传文件</button>
+
+
+<form enctype="multipart/form-data">
+    <input type="file" name="file" webkitdirectory directory/>
+    <input type="submit" value="上传文件夹" />
+</form>
+
+<script type="text/javascript">
+$(function(){
+
+    $("#uploadFileBtn").click(function() {
+        var files = document.getElementById("file").files
+        var arrFiles = Object.values(files)
+        for (let i = 0; i < arrFiles.length; i++) {
+            var file = arrFiles[i];
+            var formData = new FormData()
+            formData.append("file", file)
+            formData.append("parentId", "root")
+            formData.append("dir", 0)
+            $.ajax({
+                type: "post",
+                url: "file/upload",
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function(r, textStatus) {
+                    if (r.code <= 0) {
+                        swal({
+                            title:   "上传成功",
+                            text:    "您可以继续上传文件!",
+                            icon:    "success",
+                            timer:   2000,
+                            buttons: false
+                        }).then((value) => {
+                            if (r.redirect != "") {
+                                window.location.href = r.redirect;
+                            } else {
+                                window.location.href = "/file";
+                            }
+                        });
+                    } else {
+                        swal({
+                            text:   r.message,
+                            icon:   "warning",
+                            button: "确定",
+                        });
+                    }
+                }
+            })
+        }
+    })
+});
+
+</script>

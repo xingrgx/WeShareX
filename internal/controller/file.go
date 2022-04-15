@@ -5,6 +5,7 @@ import (
 	"path"
 
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/util/gpage"
 	"github.com/gogf/gf/v2/util/guid"
 	v1 "github.com/xingrgx/WeShareX/api/v1"
 	"github.com/xingrgx/WeShareX/internal/model"
@@ -16,9 +17,16 @@ type cFile struct{}
 var File cFile
 
 // Index 控制展示文件上传页面
-func (cf *cFile) Index(ctx context.Context, req *v1.IndexUploadReq) (res *v1.IndexUploadRes, err error) {
+func (cf *cFile) IndexFiles(ctx context.Context, req *v1.IndexFilesReq) (res *v1.IndexFilesRes, err error) {
+	userId := service.Context().Get(ctx).User.Id
+	filesMap, err := service.File().GetRootFiles(ctx, userId)
+	page := g.RequestFromCtx(ctx).GetPage(1000, 10)
 	service.View().Render(ctx, model.View{
 		Title: "资源上传",
+		Data: g.Map{
+			"page": pageContent(page),
+			"filesMap": filesMap,
+		},
 	})
 	return
 }
@@ -44,4 +52,8 @@ func (cf *cFile) UploadFile(ctx context.Context, req *v1.UploadReq) (res *v1.Upl
 	absPPath := service.File().GetFileAbsoluteParentPath(ctx, fileInput.UserId, fileInput.ParentId)
 	err = service.File().Save(file, absPPath)
 	return
+}
+
+func pageContent(page *gpage.Page) string {
+	return page.GetContent(3) + "第" + page.SelectBar() + "页"
 }

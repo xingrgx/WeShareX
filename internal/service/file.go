@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/gogf/gf/v2/text/gstr"
 	"github.com/gogf/gf/v2/database/gdb"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
+	"github.com/gogf/gf/v2/text/gstr"
 	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/xingrgx/WeShareX/internal/consts"
 	"github.com/xingrgx/WeShareX/internal/model"
@@ -44,7 +44,7 @@ func (sf *sFile) CheckFileNameExist(ctx context.Context, filename string, userId
 	n, err := dao.File.Ctx(ctx).Where(g.Map{
 		dao.File.Columns().Name:   filename,
 		dao.File.Columns().UserId: userId,
-		dao.File.Columns().Path: path,
+		dao.File.Columns().Path:   path,
 	}).Count()
 	if err != nil {
 		return err
@@ -96,7 +96,7 @@ func (sf *sFile) GetFileRelativePath(ctx context.Context, userId uint, parentId,
 	if parentId == "root" {
 		return "/" + name, nil
 	}
-	prtPath, err :=sf.GetFileRelativeParentPath(ctx, userId, parentId)
+	prtPath, err := sf.GetFileRelativeParentPath(ctx, userId, parentId)
 	if err != nil {
 		return "", err
 	}
@@ -107,4 +107,17 @@ func (sf *sFile) GetFileRelativePath(ctx context.Context, userId uint, parentId,
 func (sf *sFile) GetFileAbsoluteParentPath(ctx context.Context, userId uint, parentId string) (path string) {
 	prtPath, _ := sf.GetFileRelativeParentPath(ctx, userId, parentId)
 	return sf.GetFilesRoot(ctx) + "/" + prtPath
+}
+
+// GetRootFiles 获取root目录下的所有文件
+func (sf *sFile) GetRootFiles(ctx context.Context, userId uint) (filesMap []g.Map, err error) {
+	var filesArr []entity.File
+	dao.File.Ctx(ctx).Where(g.Map{
+		dao.File.Columns().ParentId: "root",
+		dao.File.Columns().UserId:   userId,
+	}).Scan(&filesArr)
+	for _, file := range filesArr {
+		filesMap = append(filesMap, gconv.Map(file))
+	}
+	return
 }

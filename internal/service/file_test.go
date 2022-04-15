@@ -2,6 +2,7 @@ package service_test
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/gogf/gf/v2/test/gtest"
@@ -33,4 +34,9 @@ func Test_GetFilesRoot(t *testing.T) {
 	gtest.C(t, func(t *gtest.T) {
 		t.Assert(service.File().GetFilesRoot(ctx), "files/1/root")
 	})
+}
+
+func Test_GetRootFiles(t *testing.T) {
+	files, _ := service.File().GetRootFiles(ctx, 1)
+	fmt.Println(files)
 }
