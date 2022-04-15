@@ -15,6 +15,12 @@ database:
   default:
     type:  "mysql"
     link:  "root:123456@tcp(127.0.0.1:3306)/we_sharex"
+    debug:  true
+  logger:
+    path:    "logs/sql"
+    level:   "all"
+    stdout:  true
+    ctxKeys: ["RequestId"]
 
 # 日志管理配置
 logger:
@@ -22,6 +28,7 @@ logger:
   stdout: true
   path:    "logs/default"
   ctxKeys: ["RequestId"]
+  file:    "{Y-m-d}.log"
 
 # 模板引擎配置
 viewer:
