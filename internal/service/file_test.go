@@ -2,9 +2,9 @@ package service_test
 
 import (
 	"context"
-	"fmt"
 	"testing"
 
+	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/test/gtest"
 	"github.com/xingrgx/WeShareX/internal/service"
 )
@@ -37,6 +37,12 @@ func Test_GetFilesRoot(t *testing.T) {
 }
 
 func Test_GetRootFiles(t *testing.T) {
-	files, _ := service.File().GetRootFiles(ctx, 1)
-	fmt.Println(files)
+	files, _ := service.File().GetRootFiles(ctx, 1, 1, 10)
+	g.Dump(files)
+	g.Dump(len(files))
+}
+
+func Test_CountRootFiles(t *testing.T) {
+	count, _ := service.File().CountRootFiles(ctx, 1)
+	g.Dump(count)
 }

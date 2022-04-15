@@ -110,14 +110,23 @@ func (sf *sFile) GetFileAbsoluteParentPath(ctx context.Context, userId uint, par
 }
 
 // GetRootFiles 获取root目录下的所有文件
-func (sf *sFile) GetRootFiles(ctx context.Context, userId uint) (filesMap []g.Map, err error) {
+func (sf *sFile) GetRootFiles(ctx context.Context, userId uint, page, size int) (filesMap []g.Map, err error) {
 	var filesArr []entity.File
 	dao.File.Ctx(ctx).Where(g.Map{
 		dao.File.Columns().ParentId: "root",
 		dao.File.Columns().UserId:   userId,
-	}).Scan(&filesArr)
+	}).Page(page, size).Scan(&filesArr)
 	for _, file := range filesArr {
 		filesMap = append(filesMap, gconv.Map(file))
 	}
+	return
+}
+
+// CountRootFiles 获取root目录下的文件数量
+func (sf *sFile) CountRootFiles(ctx context.Context, userId uint) (totalSize int, err error) {
+	totalSize, err = dao.File.Ctx(ctx).Where(g.Map{
+		dao.File.Columns().ParentId: "root",
+		dao.File.Columns().UserId: userId,
+	}).Count()
 	return
 }
