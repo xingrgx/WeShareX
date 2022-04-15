@@ -25,3 +25,13 @@ type UploadReq struct {
 
 type UploadRes struct {
 }
+
+// FileDetailReq 查看文件详情的请求接口
+type FileDetailReq struct {
+	g.Meta   `path:"/file/detail" method:"get" summary:"查看文件详情" tags:"文件"`
+	FileId string `json:"fileId"`
+}
+
+type FileDetailRes struct {
+	
+}

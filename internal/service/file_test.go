@@ -46,3 +46,8 @@ func Test_CountRootFiles(t *testing.T) {
 	count, _ := service.File().CountRootFiles(ctx, 1)
 	g.Dump(count)
 }
+
+func Test_GetFileByFileIdAndUserId(t *testing.T) {
+	file, _ :=service.File().GetFileByFileIdAndUserId(ctx, "1vlyjjj4140cjan26xasf2k5d0b4yiec", 1)
+	g.Dump(file)
+}

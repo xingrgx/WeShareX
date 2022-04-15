@@ -4,17 +4,25 @@
 
 {{include "index/file/upload.html"}}
 
+<div style="background-color:#5daaddcc;">
+    当前位置： /全部文件
+    <input type="hidden" value="root" id="currentPath"></input>
+</div>
+
+
 <table border="1">
     <tr>
       <th>文件名</th>
       <th>大小</th>
       <th>修改日期</th>
+      <th>操作</th>
     </tr>
 {{range $key, $file := .Data.filesMap}}
     <tr>
       <td>{{$file.name}}</td>
       <td>{{$file.size}}</td>
       <td>{{$file.updateAt}}</td>
+      <td>重命名 | 下载 | 删除 | <a href="file/detail?fileId={{$file.id}}">文件详情</a> </td>
     </tr>
     {{end}}
 </table>

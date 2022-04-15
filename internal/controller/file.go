@@ -58,3 +58,13 @@ func (cf *cFile) UploadFile(ctx context.Context, req *v1.UploadReq) (res *v1.Upl
 func pageContent(page *gpage.Page) string {
 	return page.GetContent(3) + "第" + page.SelectBar() + "页"
 }
+
+// FileDetail 控制查看文件详情
+func (cf *cFile) FileDetail(ctx context.Context, req *v1.FileDetailReq) (res *v1.FileDetailRes, err error) {
+	file, err := service.File().GetFileByFileIdAndUserId(ctx, req.FileId, service.Session().GetUser(ctx).Id)
+	service.View().Render(ctx, model.View{
+		Title: "文件详情",
+		Data: file,
+	})
+	return
+}

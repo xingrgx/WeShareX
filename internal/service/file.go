@@ -130,3 +130,12 @@ func (sf *sFile) CountRootFiles(ctx context.Context, userId uint) (totalSize int
 	}).Count()
 	return
 }
+
+// GetFileByFileIdAndUserId 根据用户ID和文件ID获取文件
+func (sf *sFile) GetFileByFileIdAndUserId(ctx context.Context, fid string, uid uint) (file *entity.File, err error) {
+	err = dao.File.Ctx(ctx).Where(g.Map{
+		dao.File.Columns().Id: fid,
+		dao.File.Columns().UserId: uid,
+	}).Scan(&file)
+	return
+}

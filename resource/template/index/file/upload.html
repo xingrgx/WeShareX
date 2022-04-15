@@ -1,5 +1,5 @@
-<input type="file" name="file" id="file" multiple="multiple"/>
-    <input type="hidden" name="currentPath" id="currentPath" value="root"></input>
+<input type="file" name="file" id="files" multiple="multiple"/>
+    
     <button id="uploadFileBtn">上传文件</button>
 
 
@@ -12,13 +12,14 @@
 $(function(){
 
     $("#uploadFileBtn").click(function() {
-        var files = document.getElementById("file").files
+        var files = document.getElementById("files").files
         var arrFiles = Object.values(files)
+        var path = document.getElementById("currentPath").value
         for (let i = 0; i < arrFiles.length; i++) {
             var file = arrFiles[i];
             var formData = new FormData()
             formData.append("file", file)
-            formData.append("parentId", "root")
+            formData.append("parentId", path)
             formData.append("dir", 0)
             $.ajax({
                 type: "post",
