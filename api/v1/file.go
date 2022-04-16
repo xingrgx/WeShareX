@@ -64,5 +64,15 @@ type FilePreviewReq struct {
 }
 
 type FilePreviewRes struct {
+
+}
+
+// FileDeleteReq 删除文件的请求接口
+type FileDeleteReq struct {
+	g.Meta `path:"/file/delete" method:"post" summary:"预览文件" tags:"文件"`
+	FileId string `json:"fileId"` 
+}
+
+type FileDeleteRes struct {
 	
 }

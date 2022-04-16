@@ -100,3 +100,9 @@ func (cf *cFile) FilePreview(ctx context.Context, req *v1.FilePreviewReq) (res *
 	g.RequestFromCtx(ctx).Response.ServeFile(path)
 	return
 }
+
+// FileDelete 控制删除文件
+func (cf *cFile) FileDelete(ctx context.Context, req *v1.FileDeleteReq) (res *v1.FileDeleteRes, err error) {
+	err = service.File().DeleteFileByFileIdAndUserId(ctx, req.FileId, service.Session().GetUser(ctx).Id)
+	return
+}

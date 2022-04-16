@@ -26,7 +26,7 @@
           <button type="button" name="renameBtn" id="renameBtn-{{$file.id}}">重命名</button> |
           <a href="file/preview?fileId={{$file.id}}"> 预览 </a> |
           <a href="file/download?fileId={{$file.id}}"> 下载 </a>|
-          删除 |
+          <button name="deleteBtn" id="deleteBtn-{{$file.id}}">删除</button> |
           <a href="file/detail?fileId={{$file.id}}">文件详情</a> 
       </td>
     </tr>
@@ -100,6 +100,39 @@
                 alert("新旧文件名相同！")
             }
         
+        })
+
+        $("[name='deleteBtn']").click(function() {
+            fileId = event.currentTarget.id.substring(10)
+            $.post(
+                "/file/delete",
+                {
+                    "fileId": fileId
+                },
+                function(r, textStatus) {
+                    if (r.code <= 0) {
+                        swal({
+                            title:   "文件删除成功",
+                            text:    "您可以继续操作!",
+                            icon:    "success",
+                            timer:   2000,
+                            buttons: false
+                        }).then((value) => {
+                            if (r.redirect != "") {
+                                window.location.href = r.redirect;
+                            } else {
+                                window.location.href = "";
+                            }
+                        });
+                    } else {
+                        swal({
+                            text:   r.message,
+                            icon:   "warning",
+                            button: "确定",
+                        });
+                    }
+                }
+            )
         })
     })
 </script>
