@@ -89,3 +89,14 @@ func (cf *cFile) FileDownload(ctx context.Context, req *v1.FileDownloadReq) (res
 	g.RequestFromCtx(ctx).Response.ServeFileDownload(path)
 	return 
 }
+
+// FilePreview 控制预览文件
+func (cf *cFile) FilePreview(ctx context.Context, req *v1.FilePreviewReq) (res *v1.FilePreviewRes, err error) {
+	path, err := service.File().GetFilePathByFileIdAndUserId(ctx, req.FileId, service.Session().GetUser(ctx).Id)
+	if err != nil {
+		return res, gerror.New("预览失败")
+	}
+	path = service.File().GetFilesRoot(ctx) + path
+	g.RequestFromCtx(ctx).Response.ServeFile(path)
+	return
+}

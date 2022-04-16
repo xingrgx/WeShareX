@@ -56,3 +56,13 @@ type FileDownloadReq struct {
 type FileDownloadRes struct {
 
 }
+
+// FilePreviewReq 预览文件的请求接口
+type FilePreviewReq struct {
+	g.Meta `path:"/file/preview" method:"get" summary:"预览文件" tags:"文件"`
+	FileId string `json:"fileId"` 
+}
+
+type FilePreviewRes struct {
+	
+}
