@@ -152,3 +152,15 @@ func (sf *sFile) RenameFile(ctx context.Context, userId uint, fileId, newName st
 	}
 	return
 }
+
+// GetFilePathByFileIdAndUserId 根据fileId和userId获取path
+func (sf *sFile) GetFilePathByFileIdAndUserId(ctx context.Context, fileId string, userId uint) (path string, err error) {
+	val, err := dao.File.Ctx(ctx).Fields(dao.File.Columns().Path).Where(g.Map {
+		dao.File.Columns().Id: fileId,
+		dao.File.Columns().UserId: userId,
+	}).Value()
+	if err != nil {
+		return "", err
+	}
+	return val.String(), nil
+}

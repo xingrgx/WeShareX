@@ -46,3 +46,13 @@ type FileRenameReq struct {
 type FileRenameRes struct {
 
 }
+
+// FileDownloadReq 下载文件的请求接口
+type FileDownloadReq struct {
+	g.Meta `path:"/file/download" method:"get" summary:"下载文件" tags:"文件"`
+	FileId string `json:"fileId"` 
+}
+
+type FileDownloadRes struct {
+
+}

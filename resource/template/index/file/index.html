@@ -23,7 +23,10 @@
       <td>{{$file.size}}</td>
       <td>{{$file.updateAt}}</td>
       <td>
-          <button type="button" name="renameBtn" id="renameBtn-{{$file.id}}">重命名</button> | 下载 | 删除 | <a href="file/detail?fileId={{$file.id}}">文件详情</a> 
+          <button type="button" name="renameBtn" id="renameBtn-{{$file.id}}">重命名</button> |
+          <a href="file/download?fileId={{$file.id}}"> 下载 </a>|
+          删除 |
+          <a href="file/detail?fileId={{$file.id}}">文件详情</a> 
       </td>
     </tr>
     {{end}}

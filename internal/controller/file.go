@@ -78,3 +78,14 @@ func (cf *cFile) FileRename(ctx context.Context, req *v1.FileRenameReq) (res *v1
 	err = service.File().RenameFile(ctx, service.Session().GetUser(ctx).Id, req.FileId, req.NewName)
 	return
 }
+
+// FileDownload 控制下载文件
+func (cf *cFile) FileDownload(ctx context.Context, req *v1.FileDownloadReq) (res *v1.FileDownloadRes, err error) {
+	path, err := service.File().GetFilePathByFileIdAndUserId(ctx, req.FileId, service.Session().GetUser(ctx).Id)
+	if err != nil {
+		return res, gerror.New("下载失败")
+	}
+	path = service.File().GetFilesRoot(ctx) + path
+	g.RequestFromCtx(ctx).Response.ServeFileDownload(path)
+	return 
+}

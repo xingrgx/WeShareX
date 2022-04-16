@@ -58,3 +58,12 @@ func Test_RenameFile(t *testing.T) {
 		t.Assert(err, nil)
 	})
 }
+
+func Test_GetFilePathByFileIdAndUserId(t *testing.T) {
+	path, err := service.File().GetFilePathByFileIdAndUserId(ctx, "1vlyjjj6yo0cjbj71q7hhgs300drqvap", 1)
+	if err != nil {
+		g.Dump("获取失败")
+	} else {
+		g.Dump(path)
+	}
+}
