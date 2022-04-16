@@ -139,3 +139,16 @@ func (sf *sFile) GetFileByFileIdAndUserId(ctx context.Context, fid string, uid u
 	}).Scan(&file)
 	return
 }
+
+// RenameFile 修改文件名
+func (sf *sFile) RenameFile(ctx context.Context, userId uint, fileId, newName string) (err error) {
+	_, err = dao.File.Ctx(ctx).OmitEmpty().Data(dao.File.Columns().Name, newName).
+	Where(g.Map {
+		dao.File.Columns().Id: fileId,
+		dao.File.Columns().UserId: userId,
+	}).Update()
+	if err != nil {
+		return gerror.New("修改文件名失败！")
+	}
+	return
+}

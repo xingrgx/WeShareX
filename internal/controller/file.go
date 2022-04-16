@@ -4,6 +4,7 @@ import (
 	"context"
 	"path"
 
+	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/util/gpage"
 	"github.com/gogf/gf/v2/util/guid"
@@ -66,5 +67,14 @@ func (cf *cFile) FileDetail(ctx context.Context, req *v1.FileDetailReq) (res *v1
 		Title: "文件详情",
 		Data: file,
 	})
+	return
+}
+
+// FileRename 控制修改文件名
+func (cf *cFile) FileRename(ctx context.Context, req *v1.FileRenameReq) (res *v1.FileRenameRes, err error) {
+	if req.NewName == "" {
+		return res, gerror.New("文件名不能为空！")
+	}
+	err = service.File().RenameFile(ctx, service.Session().GetUser(ctx).Id, req.FileId, req.NewName)
 	return
 }

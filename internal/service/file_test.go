@@ -48,6 +48,13 @@ func Test_CountRootFiles(t *testing.T) {
 }
 
 func Test_GetFileByFileIdAndUserId(t *testing.T) {
-	file, _ :=service.File().GetFileByFileIdAndUserId(ctx, "1vlyjjj4140cjan26xasf2k5d0b4yiec", 1)
+	file, _ := service.File().GetFileByFileIdAndUserId(ctx, "1vlyjjj4140cjan26xasf2k5d0b4yiec", 1)
 	g.Dump(file)
+}
+
+func Test_RenameFile(t *testing.T) {
+	gtest.C(t, func(t *gtest.T) {
+		err := service.File().RenameFile(ctx, 1, "1vlyjjj4140cjan26rptr2s1005ro5sg", "薛汇涛")
+		t.Assert(err, nil)
+	})
 }

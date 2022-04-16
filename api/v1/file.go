@@ -35,3 +35,14 @@ type FileDetailReq struct {
 type FileDetailRes struct {
 	
 }
+
+// FileRenameReq 修改文件名的请求接口
+type FileRenameReq struct {
+	g.Meta `path:"/file/rename" method:"post" summary:"修改文件名" tags:"文件"`
+	FileId string `json:"fileId"`
+	NewName string `json:"newName"`
+}
+
+type FileRenameRes struct {
+
+}
