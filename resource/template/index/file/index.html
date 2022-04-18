@@ -31,12 +31,14 @@
 {{range $key, $file := .Data.filesMap}}
     <tr>
         <td><input type="checkbox" name="checkbox" id="checkbox-{{$file.id}}"></td>
-        <td><input name="fileName" id="fileName-{{$file.id}}" type="text" disabled="true" value="{{$file.name}}"></input></td>
+        <td>
+            <input hidden name="fileName" id="fileName-{{$file.id}}" type="text" value="{{$file.name}}" class="myinput">
+            <a name="fileNameHref" id="fileNameHref-{{$file.id}}" href="file/preview?fileId={{$file.id}}">{{$file.name}}</a>
+        </td>
         <td>{{$file.size}}</td>
         <td>{{$file.updateAt}}</td>
         <td>
             <button type="button" name="renameBtn" id="renameBtn-{{$file.id}}">重命名</button> |
-            <a href="file/preview?fileId={{$file.id}}"> 预览 </a> |
             <a href="file/download?fileId={{$file.id}}"> 下载 </a>|
             <button name="deleteBtn" id="deleteBtn-{{$file.id}}">删除</button> |
             <a href="file/detail?fileId={{$file.id}}">文件详情</a> 
@@ -63,20 +65,19 @@
             var btnId = event.currentTarget.id
             fileId = btnId.substring(10)
             oldName = $("#fileName-"+fileId).val()
-            // 在关闭当前input的禁用属性前，确保其它input的禁用属性已开启，样式已移除
-            $("[name='fileName']").attr("disabled", true)
-            $("[name='fileName']").removeClass("myinput")
-            // 关闭当前input的禁用属性
-            $("#fileName-"+fileId).attr("disabled", false)
-            // 为当前input添加瞩目的样式
-            $("#fileName-"+fileId).addClass("myinput")
+            // 在展示当前input前，确保其它input已被隐藏
+            $("[name='fileName']").hide()
+            $("[name='fileNameHref']").show()
+            // 展示当前input
+            $("#fileName-"+fileId).show()
+            $("#fileNameHref-"+fileId).hide()
         })
         
         $("[name='fileName']").blur(function() {
             newName = $("#fileName-"+fileId).val()
-            // 当前input失去焦点后，开启其禁用属性，并移除其瞩目样式
-            $("#fileName-"+fileId).attr("disabled", true)
-            $("#fileName-"+fileId).removeClass("myinput")
+            // 当前input失去焦点后，隐藏之
+            $("#fileNameHref-"+fileId).show()
+            $("#fileName-"+fileId).hide()
             if (oldName != newName) {
                 $.post(
                     "file/rename",
