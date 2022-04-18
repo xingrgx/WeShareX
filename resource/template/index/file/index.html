@@ -5,30 +5,42 @@
 {{include "index/file/upload.html"}}
 
 <div style="background-color:#5daaddcc;">
-    当前位置： /全部文件
+    当前位置>> / 全部文件
     <input type="hidden" value="root" id="currentPath"></input>
 </div>
 
+<div>
+新建文件夹 | 
+<span id="disappearBar" hidden>
+    <button name="disBarBtn" id='downloadBarBtn'>下载</button> | 
+    <button id='deleteBarBtn' name="disBarBtn">删除</button> | 
+    <button id='moveBarBtn' name="disBarBtn">移动</button> | 
+    <button id='shareBarBtn' name="disBarBtn">分享</button> |
+</span>
+刷新
+</div>
 
 <table border="1">
     <tr>
-      <th>文件名</th>
-      <th>大小</th>
-      <th>修改日期</th>
-      <th>操作</th>
+        <th><input id="selectAll" type="checkbox"/>全选/全不选</th>
+        <th>文件名</th>
+        <th>大小</th>
+        <th>修改日期</th>
+        <th>操作</th>
     </tr>
 {{range $key, $file := .Data.filesMap}}
     <tr>
-      <td><input name="fileName" id="fileName-{{$file.id}}" type="text" disabled="true" value="{{$file.name}}"></input></td>
-      <td>{{$file.size}}</td>
-      <td>{{$file.updateAt}}</td>
-      <td>
-          <button type="button" name="renameBtn" id="renameBtn-{{$file.id}}">重命名</button> |
-          <a href="file/preview?fileId={{$file.id}}"> 预览 </a> |
-          <a href="file/download?fileId={{$file.id}}"> 下载 </a>|
-          <button name="deleteBtn" id="deleteBtn-{{$file.id}}">删除</button> |
-          <a href="file/detail?fileId={{$file.id}}">文件详情</a> 
-      </td>
+        <td><input type="checkbox" name="checkbox" id="checkbox-{{$file.id}}"></td>
+        <td><input name="fileName" id="fileName-{{$file.id}}" type="text" disabled="true" value="{{$file.name}}"></input></td>
+        <td>{{$file.size}}</td>
+        <td>{{$file.updateAt}}</td>
+        <td>
+            <button type="button" name="renameBtn" id="renameBtn-{{$file.id}}">重命名</button> |
+            <a href="file/preview?fileId={{$file.id}}"> 预览 </a> |
+            <a href="file/download?fileId={{$file.id}}"> 下载 </a>|
+            <button name="deleteBtn" id="deleteBtn-{{$file.id}}">删除</button> |
+            <a href="file/detail?fileId={{$file.id}}">文件详情</a> 
+        </td>
     </tr>
     {{end}}
 </table>
@@ -131,6 +143,60 @@
                             button: "确定",
                         });
                     }
+                }
+            )
+        })
+
+        var isAllChecked = $("#selectAll").prop("checked")
+        $("#selectAll").click(function() {
+            if (isAllChecked) {
+                $("[name='checkbox']").each(function() {
+                    this.checked = false
+                })
+                isAllChecked = false
+            } else {
+                $("[name='checkbox']").each(function() {
+                    this.checked = true
+                })
+                isAllChecked = true
+            }
+            // 有一个被选中，则浮现四个按钮
+            if ($("[name='checkbox']:checked")[0]) {
+                $("#disappearBar").show()
+            } else {
+                $("#disappearBar").hide()
+            }
+        })
+
+        $("[name='checkbox']").click(function() {
+            // 有一个未被选中，则全选失效
+            if ($("[name='checkbox']:not(:checked)")[0]) {
+                $("#selectAll").prop("checked", false)
+            } else {
+                $("#selectAll").prop("checked", true)
+            }
+            // 有一个被选中，则浮现四个按钮
+            if ($("[name='checkbox']:checked")[0]) {
+                $("#disappearBar").show()
+            } else {
+                $("#disappearBar").hide()
+            }
+        })
+
+        $("#deleteBarBtn").click(function() {
+            alert("dianji")
+        })
+
+        $("#downloadBarBtn").click(function() {
+            var ids = ""
+            $("[name='checkbox']:checked").each(function () {
+                ids += this.id.substring(9)+","
+            })
+            alert(ids)
+            $.get(
+                "/file/download",
+                {
+                    "fileId": ids
                 }
             )
         })
