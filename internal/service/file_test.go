@@ -54,7 +54,7 @@ func Test_GetFileByFileIdAndUserId(t *testing.T) {
 
 func Test_RenameFile(t *testing.T) {
 	gtest.C(t, func(t *gtest.T) {
-		err := service.File().RenameFile(ctx, 1, "1vlyjjj4140cjan26rptr2s1005ro5sg", "薛汇涛")
+		err := service.File().RenameFile(ctx, 1, "1vlyjjj4140cjan26rptr2s1005ro5sg", "张三")
 		t.Assert(err, nil)
 	})
 }
@@ -66,4 +66,14 @@ func Test_GetFilePathByFileIdAndUserId(t *testing.T) {
 	} else {
 		g.Dump(path)
 	}
+}
+
+func Test_GetFileByFileNamePathAndUserId(t *testing.T)  {
+	file, err := service.File().GetFileByFileNamePathAndUserId(ctx, "1.jpg", "/hi/1.jpg", 1)
+	if err != nil {
+		g.Dump("error")
+	} else {
+		g.Dump(file)
+	}
+	
 }

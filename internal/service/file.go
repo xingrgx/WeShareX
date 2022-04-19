@@ -179,3 +179,13 @@ func (sf *sFile) DeleteFileByFileIdAndUserId(ctx context.Context, fileId string,
 	}
 	return
 }
+
+// GetFileByFileNamePathAndUserId 根据文件名、文件路径和用户ID查询文件
+func (sf *sFile) GetFileByFileNamePathAndUserId(ctx context.Context, name, path string, userId uint) (file entity.File, err error) {
+	err = dao.File.Ctx(ctx).Where(g.Map {
+		dao.File.Columns().Name: name,
+		dao.File.Columns().Path: path,
+		dao.File.Columns().UserId: userId,
+	}).Scan(&file)
+	return
+}

@@ -29,6 +29,7 @@ var (
 					controller.Register,
 					controller.Profile,
 					controller.File,
+					controller.Directory,
 				)
 			})
 			s.Run()
