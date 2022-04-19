@@ -112,11 +112,11 @@ func (sf *sFile) GetFileAbsoluteParentPath(ctx context.Context, userId uint, par
 	return sf.GetFilesRoot(ctx) + "/" + prtPath
 }
 
-// GetRootFiles 获取root目录下的所有文件
-func (sf *sFile) GetRootFiles(ctx context.Context, userId uint, page, size int) (filesMap []g.Map, err error) {
+// GetDirFiles 获取指定文件夹下的所有文件
+func (sf *sFile) GetDirFiles(ctx context.Context, userId uint, parentId string, page, size int) (filesMap []g.Map, err error) {
 	var filesArr []entity.File
 	dao.File.Ctx(ctx).Where(g.Map{
-		dao.File.Columns().ParentId: "root",
+		dao.File.Columns().ParentId: parentId,
 		dao.File.Columns().UserId:   userId,
 	}).Page(page, size).Scan(&filesArr)
 	for _, file := range filesArr {
@@ -125,10 +125,10 @@ func (sf *sFile) GetRootFiles(ctx context.Context, userId uint, page, size int) 
 	return
 }
 
-// CountRootFiles 获取root目录下的文件数量
-func (sf *sFile) CountRootFiles(ctx context.Context, userId uint) (totalSize int, err error) {
+// CountDirFiles 获取指定目录下的文件数量
+func (sf *sFile) CountDirFiles(ctx context.Context, userId uint, parentId string) (totalSize int, err error) {
 	totalSize, err = dao.File.Ctx(ctx).Where(g.Map{
-		dao.File.Columns().ParentId: "root",
+		dao.File.Columns().ParentId: parentId,
 		dao.File.Columns().UserId: userId,
 	}).Count()
 	return

@@ -68,12 +68,17 @@ func Test_GetFilePathByFileIdAndUserId(t *testing.T) {
 	}
 }
 
-func Test_GetFileByFileNamePathAndUserId(t *testing.T)  {
+func Test_GetFileByFileNamePathAndUserId(t *testing.T) {
 	file, err := service.File().GetFileByFileNamePathAndUserId(ctx, "1.jpg", "/hi/1.jpg", 1)
 	if err != nil {
 		g.Dump("error")
 	} else {
 		g.Dump(file)
 	}
-	
+
+}
+
+func Test_GetDirFiles(t *testing.T) {
+	m, _ := service.File().GetDirFiles(ctx, 1, "1vlyjjj4uc0cje8aq4455eo190skcs6g", 1, 10)
+	g.Dump(m)
 }
