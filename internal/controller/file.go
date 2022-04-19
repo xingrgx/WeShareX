@@ -20,8 +20,8 @@ var File cFile
 // Index 控制展示文件上传页面
 func (cf *cFile) IndexFiles(ctx context.Context, req *v1.IndexFilesReq) (res *v1.IndexFilesRes, err error) {
 	userId := service.Context().Get(ctx).User.Id
-	filesMap, err := service.File().GetRootFiles(ctx, userId, req.Page, req.Size)
-	totalSize, _ := service.File().CountRootFiles(ctx, userId)
+	filesMap, err := service.File().GetDirFiles(ctx, userId, req.ParentId, req.Page, req.Size)
+	totalSize, _ := service.File().CountDirFiles(ctx, userId, req.ParentId)
 	page := g.RequestFromCtx(ctx).GetPage(totalSize, req.Size)
 	service.View().Render(ctx, model.View{
 		Title: "资源上传",

@@ -7,6 +7,7 @@ import (
 // IndexFilesReq 展示上传文件页面的请求
 type IndexFilesReq struct {
 	g.Meta `path:"/file" method:"get" summary:"展示上传页面" tags:"文件"`
+	ParentId string `json:"dirId" d:"root"`
 	PaginationReq
 }
 

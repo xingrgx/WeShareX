@@ -33,7 +33,12 @@
         <td><input type="checkbox" name="checkbox" id="checkbox-{{$file.id}}"></td>
         <td>
             <input hidden name="fileName" id="fileName-{{$file.id}}" type="text" value="{{$file.name}}" class="myinput">
+            {{if eq $file.dir 1}}
+            <a name="fileNameHref" id="fileNameHref-{{$file.id}}" href="file?dirId={{$file.id}}">{{$file.name}}</a>
+            {{else}}
             <a name="fileNameHref" id="fileNameHref-{{$file.id}}" href="file/preview?fileId={{$file.id}}">{{$file.name}}</a>
+            {{end}}
+            
         </td>
         <td>{{$file.size}}</td>
         <td>{{$file.updateAt}}</td>

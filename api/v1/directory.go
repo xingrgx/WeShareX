@@ -11,3 +11,7 @@ type DirUploadReq struct {
 type DirUploadRes struct {
 
 }
+
+type DirCheckReq struct {
+	g.Meta `path:"/dir/check" method:"post" summary:"查看文件夹内容" tags:"文件夹"`
+}
