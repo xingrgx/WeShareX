@@ -118,7 +118,7 @@ func (sf *sFile) GetDirFiles(ctx context.Context, userId uint, parentId string, 
 	dao.File.Ctx(ctx).Where(g.Map{
 		dao.File.Columns().ParentId: parentId,
 		dao.File.Columns().UserId:   userId,
-	}).Page(page, size).Scan(&filesArr)
+	}).Page(page, size).OrderDesc(dao.File.Columns().UpdateAt).Scan(&filesArr)
 	for _, file := range filesArr {
 		filesMap = append(filesMap, gconv.Map(file))
 	}
