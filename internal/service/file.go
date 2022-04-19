@@ -85,6 +85,9 @@ func (sf *sFile) GetFileRelativeParentPath(ctx context.Context, userId uint, par
 	if err != nil {
 		return "", err
 	}
+	if file.Dir == 1 {
+		return file.Path, nil
+	}
 	arr := gstr.Split(file.Path, "/")
 	arr = arr[:len(arr)-1]
 	prtPath := gstr.Join(arr, "/")
