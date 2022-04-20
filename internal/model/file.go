@@ -11,3 +11,9 @@ type FileUploadInput struct {
 	Path     string
 	Size     int64
 }
+
+type FileCrumb struct {
+	Id string
+	Name string
+	ParentId string
+}

@@ -3,11 +3,12 @@ package service
 import (
 	"context"
 
+	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gfile"
 	"github.com/gogf/gf/v2/text/gstr"
-	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/xingrgx/WeShareX/internal/model"
+	"github.com/xingrgx/WeShareX/internal/service/internal/dao"
 )
 
 type sView struct{}
@@ -17,13 +18,41 @@ func View() *sView {
 	return &sView{}
 }
 
+// GetBreadCrumbView 获取查看文件页面的路径面包屑视图
+func (s *sView) GetBreadCrumbView(ctx context.Context, fileId string) (crumbViews []model.BreadCrumbView) {
+	if fileId == "root" {
+		crumbViews = append(crumbViews, model.BreadCrumbView {
+			Name: "全部文件", 
+			Url: "/file"})
+		return
+	}
+	var crumb model.FileCrumb
+	// 保存parentId=root的crumb的fileId
+	dao.File.Ctx(ctx).Fields(crumb).Where(dao.File.Columns().Id, fileId).Scan(&crumb)
+	tmpId := crumb.Id
+	// 根据当前文件的fileId反向遍历至root目录
+	for !g.IsEmpty(crumb) && crumb.ParentId != "root" {
+		// 新元素插入到切片头
+		crumbViews = append([]model.BreadCrumbView{
+				{Name: crumb.Name, Url: "/file?dirId=" + crumb.Id},
+			}, crumbViews...)
+		fileId = crumb.ParentId
+		dao.File.Ctx(ctx).Fields(crumb).Where(dao.File.Columns().Id, fileId).Scan(&crumb)
+	}
+	crumbViews = append([]model.BreadCrumbView{
+		{Name: "全部文件", Url: "/file"},
+		{Name: crumb.Name, Url: "/file?dirId=" + tmpId},
+	}, crumbViews...)
+	return crumbViews
+}
+
 // RenderTpl 渲染指定模板页面
 func (s *sView) RenderTpl(ctx context.Context, tpl string, data ...model.View) {
 	var (
-		request  = g.RequestFromCtx(ctx)
-		viewObj  = model.View{}
-		viewData = make(g.Map)
-		defaultTitle  = g.Cfg().MustGet(ctx, `setting.title`).String()
+		request      = g.RequestFromCtx(ctx)
+		viewObj      = model.View{}
+		viewData     = make(g.Map)
+		defaultTitle = g.Cfg().MustGet(ctx, `setting.title`).String()
 	)
 	// 获取前端传来的页面信息中的第一个
 	if len(data) > 0 {

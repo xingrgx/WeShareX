@@ -29,6 +29,7 @@ func (cf *cFile) IndexFiles(ctx context.Context, req *v1.IndexFilesReq) (res *v1
 			"page":     pageContent(page),
 			"filesMap": filesMap,
 		},
+		BreadCrumbs: service.View().GetBreadCrumbView(ctx, req.ParentId),
 	})
 	return
 }

@@ -5,7 +5,10 @@
 {{include "index/file/upload.html"}}
 
 <div style="background-color:#5daaddcc;">
-    当前位置>> / 全部文件
+    当前位置
+    {{range $key, $crumb := .BreadCrumbs}}
+       >> <a href="{{$crumb.Url}}">{{$crumb.Name}}</a>
+    {{end}}
     <input type="hidden" value="root" id="currentPathId"></input>
 </div>
 
@@ -58,7 +61,7 @@
     .myinput {
         outline-style: none ;
         border: 2px solid rgb(7, 135, 221); 
-        font-size: 12px;
+        font-size: 16px;
     }
 </style>
 <div>{{.Data.page}}</div>
