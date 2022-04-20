@@ -28,9 +28,8 @@ func (s *sView) GetBreadCrumbView(ctx context.Context, fileId string) (crumbView
 		return
 	}
 	var crumb model.FileCrumb
-	// 保存parentId=root的crumb的fileId
+
 	dao.File.Ctx(ctx).Fields(crumb).Where(dao.File.Columns().Id, fileId).Scan(&crumb)
-	tmpId := crumb.Id
 	// 根据当前文件的fileId反向遍历至root目录
 	for !g.IsEmpty(crumb) && crumb.ParentId != "root" {
 		// 新元素插入到切片头
@@ -44,9 +43,10 @@ func (s *sView) GetBreadCrumbView(ctx context.Context, fileId string) (crumbView
 		fileId = crumb.ParentId
 		dao.File.Ctx(ctx).Fields(crumb).Where(dao.File.Columns().Id, fileId).Scan(&crumb)
 	}
+	// 经过for循环后的crumb的parentId必为root
 	crumbViews = append([]model.BreadCrumbView{
 		{Name: "全部文件", Url: "/file", CurrentPathId: "root"},
-		{Name: crumb.Name, Url: "/file?dirId=" + tmpId, CurrentPathId: tmpId},
+		{Name: crumb.Name, Url: "/file?dirId=" + crumb.Id, CurrentPathId: crumb.Id},
 	}, crumbViews...)
 	return crumbViews
 }
