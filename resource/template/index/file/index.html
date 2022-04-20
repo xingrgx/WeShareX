@@ -9,11 +9,11 @@
     {{range $key, $crumb := .BreadCrumbs}}
        >> <a href="{{$crumb.Url}}">{{$crumb.Name}}</a>
     {{end}}
-    <input type="hidden" value="root" id="currentPathId"></input>
+    <input type="hidden" value="{{.Data.currentPathId}}" id="currentPathId"></input>
 </div>
 
 <div>
-新建文件夹 | 
+<button id="createDirBtn">新建文件夹</button> | 
 <span id="disappearBar" hidden>
     <button name="disBarBtn" id='downloadBarBtn'>下载</button> | 
     <button id='deleteBarBtn' name="disBarBtn">删除</button> | 
@@ -31,13 +31,16 @@
         <th>修改日期</th>
         <th>操作</th>
     </tr>
+    <tr id="newDirPlace">
+        
+    </tr>
 {{range $key, $file := .Data.filesMap}}
     <tr>
         <td><input type="checkbox" name="checkbox" id="checkbox-{{$file.id}}"></td>
         <td>
             <input hidden name="fileName" id="fileName-{{$file.id}}" type="text" value="{{$file.name}}" class="myinput">
             {{if eq $file.dir 1}}
-            <a name="fileNameHref" id="fileNameHref-{{$file.id}}" href="file?dirId={{$file.id}}">{{$file.name}}</a>
+            <a name="fileNameHref" id="fileNameHref-{{$file.id}}" href="file?dirId={{$file.id}}" onclick="refreshCurrentPathId('{{$file.id}}')">{{$file.name}}</a>
             {{else}}
             <a name="fileNameHref" id="fileNameHref-{{$file.id}}" href="file/preview?fileId={{$file.id}}">{{$file.name}}</a>
             {{end}}
@@ -68,6 +71,47 @@
 
 <script type="text/javascript">
     $(function(){
+        
+        $("#createDirBtn").click(function() {
+            $("#newDirPlace").html('<td><input type="checkbox"></td><td><input type="text" id="newDirName" class="myinput" ></td></td><td></td><td></td><td></td>')
+            $("#newDirName").blur(function() {
+                var name = $("#newDirName").val()
+                var currentPathId = $("#currentPathId").val()
+                $.post(
+                    "dir/create",
+                    {
+                        "name": name,
+                        "parentId": currentPathId,
+                    },
+                    function(r, textStatus) {
+                        if (r.code <= 0) {
+                            swal({
+                                title:   "新建文件夹成功",
+                                text:    "您可以继续操作!",
+                                icon:    "success",
+                                timer:   2000,
+                                buttons: false
+                            }).then((value) => {
+                                if (r.redirect != "") {
+                                    window.location.href = r.redirect;
+                                } else {
+                                    window.location.href = "";
+                                }
+                            });
+                        } else {
+                            swal({
+                                text:   r.message,
+                                icon:   "warning",
+                                button: "确定",
+                            }).then(function() {
+                                window.location.href = "";
+                            });
+                        }
+                    }
+                )
+            })
+        })
+
         var fileId, oldName, newName
         $("[name='renameBtn']").click(function() {
             var btnId = event.currentTarget.id

@@ -13,4 +13,5 @@ type View struct {
 type BreadCrumbView struct {
 	Name string
 	Url  string
+	CurrentPathId string // 即当前文件夹的id 
 }

@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 
+	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/gogf/gf/v2/util/guid"
@@ -18,6 +19,9 @@ var Directory cDirectory
 
 // DirUpload 控制上传文件夹
 func (cd *cDirectory) DirUpload(ctx context.Context, req *v1.DirUploadReq) (res *v1.DirUploadRes, err error) {
+	if (req.Name == "") {
+		return res, gerror.New("文件夹名不能为空")
+	}
 	userId := service.Session().GetUser(ctx).Id
 	dirId := guid.S()
 	dir := model.FileUploadInput{

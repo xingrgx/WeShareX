@@ -21,9 +21,10 @@ func View() *sView {
 // GetBreadCrumbView 获取查看文件页面的路径面包屑视图
 func (s *sView) GetBreadCrumbView(ctx context.Context, fileId string) (crumbViews []model.BreadCrumbView) {
 	if fileId == "root" {
-		crumbViews = append(crumbViews, model.BreadCrumbView {
-			Name: "全部文件", 
-			Url: "/file"})
+		crumbViews = append(crumbViews, model.BreadCrumbView{
+			Name:          "全部文件",
+			Url:           "/file",
+			CurrentPathId: "root"})
 		return
 	}
 	var crumb model.FileCrumb
@@ -34,14 +35,18 @@ func (s *sView) GetBreadCrumbView(ctx context.Context, fileId string) (crumbView
 	for !g.IsEmpty(crumb) && crumb.ParentId != "root" {
 		// 新元素插入到切片头
 		crumbViews = append([]model.BreadCrumbView{
-				{Name: crumb.Name, Url: "/file?dirId=" + crumb.Id},
-			}, crumbViews...)
+			{
+				Name:          crumb.Name,
+				Url:           "/file?dirId=" + crumb.Id,
+				CurrentPathId: crumb.Id,
+			},
+		}, crumbViews...)
 		fileId = crumb.ParentId
 		dao.File.Ctx(ctx).Fields(crumb).Where(dao.File.Columns().Id, fileId).Scan(&crumb)
 	}
 	crumbViews = append([]model.BreadCrumbView{
-		{Name: "全部文件", Url: "/file"},
-		{Name: crumb.Name, Url: "/file?dirId=" + tmpId},
+		{Name: "全部文件", Url: "/file", CurrentPathId: "root"},
+		{Name: crumb.Name, Url: "/file?dirId=" + tmpId, CurrentPathId: tmpId},
 	}, crumbViews...)
 	return crumbViews
 }

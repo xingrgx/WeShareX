@@ -23,13 +23,16 @@ func (cf *cFile) IndexFiles(ctx context.Context, req *v1.IndexFilesReq) (res *v1
 	filesMap, err := service.File().GetDirFiles(ctx, userId, req.ParentId, req.Page, req.Size)
 	totalSize, _ := service.File().CountDirFiles(ctx, userId, req.ParentId)
 	page := g.RequestFromCtx(ctx).GetPage(totalSize, req.Size)
+	breadCrumbs := service.View().GetBreadCrumbView(ctx, req.ParentId)
+	currentPathId := breadCrumbs[len(breadCrumbs) - 1].CurrentPathId
 	service.View().Render(ctx, model.View{
 		Title: "资源上传",
 		Data: g.Map{
 			"page":     pageContent(page),
 			"filesMap": filesMap,
+			"currentPathId": currentPathId,
 		},
-		BreadCrumbs: service.View().GetBreadCrumbView(ctx, req.ParentId),
+		BreadCrumbs: breadCrumbs,
 	})
 	return
 }
