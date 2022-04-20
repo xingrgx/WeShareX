@@ -167,8 +167,7 @@
         
         })
 
-        $("[name='deleteBtn']").click(function() {
-            fileId = event.currentTarget.id.substring(10)
+        function deleteFile(fileId) {
             $.post(
                 "/file/delete",
                 {
@@ -198,6 +197,11 @@
                     }
                 }
             )
+        }
+
+        $("[name='deleteBtn']").click(function() {
+            fileId = event.currentTarget.id.substring(10)
+            deleteFile(fileId)
         })
 
         var isAllChecked = $("#selectAll").prop("checked")
@@ -237,7 +241,13 @@
         })
 
         $("#deleteBarBtn").click(function() {
-            alert("dianji")
+            var ids = []
+            $("[name='checkbox']:checked").each(function () {
+                ids.push(this.id.substring(9))
+            })
+            for (let i = 0; i < ids.length; i++) {
+                deleteFile(ids[i])
+            }
         })
 
         $("#downloadBarBtn").click(function() {
