@@ -37,7 +37,7 @@ func Test_GetFilesRoot(t *testing.T) {
 }
 
 func Test_GetFileByFileIdAndUserId(t *testing.T) {
-	file, _ := service.File().GetFileByFileIdAndUserId(ctx, "1vlyjjj4140cjan26xasf2k5d0b4yiec", 1)
+	file, _ := service.File().GetFileByFileIdAndUserId(ctx, "1vlyjjj4uc0cje8jw4qq9q04b0i3o5gs", 1)
 	g.Dump(file)
 }
 

@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/gogf/gf/v2/database/gdb"
 	"github.com/gogf/gf/v2/errors/gerror"
@@ -34,7 +35,7 @@ func (sf *sFile) UploadFile(ctx context.Context, fileInput model.FileUploadInput
 		if err := sf.CheckFileNameExist(ctx, fileInput.Name, fileInput.UserId, fileInput.Path); err != nil {
 			return err
 		}
-		_, err := dao.File.Ctx(ctx).Data(file).OmitEmpty().Save()
+		_, err := dao.File.Ctx(ctx).Data(file).Save()
 		return err
 	})
 }
@@ -129,7 +130,7 @@ func (sf *sFile) GetDirFiles(ctx context.Context, userId uint, parentId string, 
 func (sf *sFile) CountDirFiles(ctx context.Context, userId uint, parentId string) (totalSize int, err error) {
 	totalSize, err = dao.File.Ctx(ctx).Where(g.Map{
 		dao.File.Columns().ParentId: parentId,
-		dao.File.Columns().UserId: userId,
+		dao.File.Columns().UserId:   userId,
 	}).Count()
 	return
 }
@@ -137,7 +138,7 @@ func (sf *sFile) CountDirFiles(ctx context.Context, userId uint, parentId string
 // GetFileByFileIdAndUserId 根据用户ID和文件ID获取文件
 func (sf *sFile) GetFileByFileIdAndUserId(ctx context.Context, fid string, uid uint) (file *entity.File, err error) {
 	err = dao.File.Ctx(ctx).Where(g.Map{
-		dao.File.Columns().Id: fid,
+		dao.File.Columns().Id:     fid,
 		dao.File.Columns().UserId: uid,
 	}).Scan(&file)
 	return
@@ -146,10 +147,10 @@ func (sf *sFile) GetFileByFileIdAndUserId(ctx context.Context, fid string, uid u
 // RenameFile 修改文件名
 func (sf *sFile) RenameFile(ctx context.Context, userId uint, fileId, newName string) (err error) {
 	_, err = dao.File.Ctx(ctx).OmitEmpty().Data(dao.File.Columns().Name, newName).
-	Where(g.Map {
-		dao.File.Columns().Id: fileId,
-		dao.File.Columns().UserId: userId,
-	}).Update()
+		Where(g.Map{
+			dao.File.Columns().Id:     fileId,
+			dao.File.Columns().UserId: userId,
+		}).Update()
 	if err != nil {
 		return gerror.New("修改文件名失败！")
 	}
@@ -158,8 +159,8 @@ func (sf *sFile) RenameFile(ctx context.Context, userId uint, fileId, newName st
 
 // GetFilePathByFileIdAndUserId 根据fileId和userId获取path
 func (sf *sFile) GetFilePathByFileIdAndUserId(ctx context.Context, fileId string, userId uint) (path string, err error) {
-	val, err := dao.File.Ctx(ctx).Fields(dao.File.Columns().Path).Where(g.Map {
-		dao.File.Columns().Id: fileId,
+	val, err := dao.File.Ctx(ctx).Fields(dao.File.Columns().Path).Where(g.Map{
+		dao.File.Columns().Id:     fileId,
 		dao.File.Columns().UserId: userId,
 	}).Value()
 	if err != nil {
@@ -168,10 +169,19 @@ func (sf *sFile) GetFilePathByFileIdAndUserId(ctx context.Context, fileId string
 	return val.String(), nil
 }
 
+// IsFile 根据ID判断是文件（true）还是文件夹（false）
+func (sf *sFile) IsFile(ctx context.Context, id string) (is bool){
+	dir, _ := dao.File.Ctx(ctx).Fields(dao.File.Columns().Dir).Where(g.Map{
+		dao.File.Columns().Id:     id,
+	}).Value()
+	return dir.Int() == 0
+}
+
 // DeleteFileByFileIdAndUserId 根据filedId和userId删除文件
 func (sf *sFile) DeleteFileByFileIdAndUserId(ctx context.Context, fileId string, userId uint) (err error) {
+	deleteFileFromDisk(ctx, fileId, userId)
 	_, err = dao.File.Ctx(ctx).Where(g.Map{
-		dao.File.Columns().Id: fileId,
+		dao.File.Columns().Id:     fileId,
 		dao.File.Columns().UserId: userId,
 	}).Delete()
 	if err != nil {
@@ -180,11 +190,19 @@ func (sf *sFile) DeleteFileByFileIdAndUserId(ctx context.Context, fileId string,
 	return
 }
 
+func deleteFileFromDisk(ctx context.Context, fileId string, userId uint) (err error) {
+	file, _ := File().GetFileByFileIdAndUserId(ctx, fileId, userId)
+	root := File().GetFilesRoot(ctx)
+	filePath := "./" + root + file.Path
+	os.Remove(filePath)
+	return 
+}
+
 // GetFileByFileNamePathAndUserId 根据文件名、文件路径和用户ID查询文件
 func (sf *sFile) GetFileByFileNamePathAndUserId(ctx context.Context, name, path string, userId uint) (file entity.File, err error) {
-	err = dao.File.Ctx(ctx).Where(g.Map {
-		dao.File.Columns().Name: name,
-		dao.File.Columns().Path: path,
+	err = dao.File.Ctx(ctx).Where(g.Map{
+		dao.File.Columns().Name:   name,
+		dao.File.Columns().Path:   path,
 		dao.File.Columns().UserId: userId,
 	}).Scan(&file)
 	return
