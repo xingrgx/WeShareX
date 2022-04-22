@@ -27,6 +27,15 @@ type UploadReq struct {
 type UploadRes struct {
 }
 
+type UploadBigFileReq struct {
+	g.Meta  `path:"/file/big" method:"post" summary:"上传文件" tags:"文件"`
+	Path string `json:"path"`
+}
+
+type UploadBigFileRes struct {
+	
+}
+
 // FileDetailReq 查看文件详情的请求接口
 type FileDetailReq struct {
 	g.Meta   `path:"/file/detail" method:"get" summary:"查看文件详情" tags:"文件"`

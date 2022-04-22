@@ -2,10 +2,13 @@ package controller
 
 import (
 	"context"
+	"io"
 	"path"
+	"time"
 
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gfile"
 	"github.com/gogf/gf/v2/util/gpage"
 	"github.com/gogf/gf/v2/util/guid"
 	v1 "github.com/xingrgx/WeShareX/api/v1"
@@ -24,12 +27,12 @@ func (cf *cFile) IndexFiles(ctx context.Context, req *v1.IndexFilesReq) (res *v1
 	totalSize, _ := service.File().CountDirFiles(ctx, userId, req.ParentId)
 	page := g.RequestFromCtx(ctx).GetPage(totalSize, req.Size)
 	breadCrumbs := service.View().GetBreadCrumbView(ctx, req.ParentId)
-	currentPathId := breadCrumbs[len(breadCrumbs) - 1].CurrentPathId
+	currentPathId := breadCrumbs[len(breadCrumbs)-1].CurrentPathId
 	service.View().Render(ctx, model.View{
 		Title: "资源上传",
 		Data: g.Map{
-			"page":     pageContent(page),
-			"filesMap": filesMap,
+			"page":          pageContent(page),
+			"filesMap":      filesMap,
 			"currentPathId": currentPathId,
 		},
 		BreadCrumbs: breadCrumbs,
@@ -37,27 +40,58 @@ func (cf *cFile) IndexFiles(ctx context.Context, req *v1.IndexFilesReq) (res *v1
 	return
 }
 
-// UploadFiles 控制上传文件
-func (cf *cFile) UploadFile(ctx context.Context, req *v1.UploadReq) (res *v1.UploadRes, err error) {
-	file := g.RequestFromCtx(ctx).GetUploadFile("file")
-	fileType := path.Ext(file.Filename)
-	fileInput := model.FileUploadInput{
-		Id:       guid.S(),
-		UserId:   service.Session().GetUser(ctx).Id,
-		Name:     file.Filename,
-		ParentId: req.ParentId,
-		Dir:      req.Dir,
-		Type:     fileType,
-		Size:     file.Size,
+func (cd *cFile) UploadBigFile(ctx context.Context, req *v1.UploadBigFileReq) (res *v1.UploadBigFileRes, err error) {
+	r := g.RequestFromCtx(ctx)
+	g.Client().SetTimeout(6000 * time.Second)
+	r.Server.SetClientMaxBodySize(1024 * 1024 * 1024 * 10)
+	file := r.GetUploadFile("file")
+	name, err := file.Save(req.Path)
+	if err == nil {
+		g.Dump(name)
 	}
-	relPath, _ := service.File().GetFileRelativePath(ctx, fileInput.UserId, fileInput.ParentId, fileInput.Name)
-	fileInput.Path = relPath
-	if err = service.File().UploadFile(ctx, fileInput); err != nil {
+	return
+}
+
+// UploadFiles 控制上传文件
+func (cf *cFile) UploadFile(ctx context.Context, req *v1.UploadReq) (*v1.UploadRes, error) {
+	var res *v1.UploadRes
+	g.Client().SetTimeout(5 * time.Second)
+	if err := g.RequestFromCtx(ctx).ParseMultipartForm(128<<20); err != nil {
 		return res, err
 	}
-	absPPath := service.File().GetFileAbsoluteParentPath(ctx, fileInput.UserId, fileInput.ParentId)
-	err = service.File().Save(file, absPPath)
-	return
+	if srcFile, fileHeader, err := g.RequestFromCtx(ctx).FormFile("file"); err == nil {
+		defer func() { _ = srcFile.Close() } ()
+		fileType := path.Ext(fileHeader.Filename)
+		fileInput := model.FileUploadInput{
+			Id:       guid.S(),
+			UserId:   service.Session().GetUser(ctx).Id,
+			Name:     fileHeader.Filename,
+			ParentId: req.ParentId,
+			Dir:      req.Dir,
+			Type:     fileType,
+			Size:     fileHeader.Size,
+		}
+		relPath, _ := service.File().GetFileRelativePath(ctx, fileInput.UserId, fileInput.ParentId, fileInput.Name)
+		fileInput.Path = relPath
+		if err = service.File().UploadFile(ctx, fileInput); err != nil {
+			return res, err
+		}
+		absPath := service.File().GetFileAbsoluteParentPath(ctx, fileInput.UserId, fileInput.ParentId) + fileInput.Name
+		g.Dump(absPath)
+		dstFile, err := gfile.Create(absPath)
+		if err != nil {
+			return res, err
+		}
+		defer func() { dstFile.Close() }()
+		if _, err = io.Copy(dstFile, srcFile); err != nil {
+			return res, err
+		}
+	} else {
+		return res, err
+	}
+
+	//err = service.File().Save(file, absPPath)
+	return res, nil
 }
 
 func pageContent(page *gpage.Page) string {
@@ -69,7 +103,7 @@ func (cf *cFile) FileDetail(ctx context.Context, req *v1.FileDetailReq) (res *v1
 	file, err := service.File().GetFileByFileIdAndUserId(ctx, req.FileId, service.Session().GetUser(ctx).Id)
 	service.View().Render(ctx, model.View{
 		Title: "文件详情",
-		Data: file,
+		Data:  file,
 	})
 	return
 }
@@ -91,7 +125,7 @@ func (cf *cFile) FileDownload(ctx context.Context, req *v1.FileDownloadReq) (res
 	}
 	path = service.File().GetFilesRoot(ctx) + path
 	g.RequestFromCtx(ctx).Response.ServeFileDownload(path)
-	return 
+	return
 }
 
 // FilePreview 控制预览文件

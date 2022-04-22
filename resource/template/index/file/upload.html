@@ -1,3 +1,9 @@
+<form enctype="multipart/form-data" action="/file/big" method="post">
+    <input type="file" name="file" />
+    <input type="text" name="path" value="./files/big" />
+    <input type="submit" value="upload" />
+</form>
+
 <input type="file" name="file" id="files" multiple="multiple"/>
 <button id="uploadFileBtn">上传文件</button>
 <br>
@@ -16,10 +22,11 @@ $(function(){
         $.ajax({
             type: "post",
             url: "file/upload",
-            cache: false,
+            cache: true,
             contentType: false,
             processData: false,
             data: formData,
+            timeout: 1800000,
             success: function(r, textStatus) {
                 if (r.code <= 0) {
                     swal({

@@ -110,7 +110,7 @@ func (sf *sFile) GetFileRelativePath(ctx context.Context, userId uint, parentId,
 // GetUserFileAbsolutePath 获取当前文件的父级绝对路径
 func (sf *sFile) GetFileAbsoluteParentPath(ctx context.Context, userId uint, parentId string) (path string) {
 	prtPath, _ := sf.GetFileRelativeParentPath(ctx, userId, parentId)
-	return sf.GetFilesRoot(ctx) + "/" + prtPath
+	return sf.GetFilesRoot(ctx) + prtPath
 }
 
 // GetDirFiles 获取指定文件夹下的所有文件
