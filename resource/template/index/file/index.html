@@ -50,7 +50,11 @@
         <td>{{$file.updateAt}}</td>
         <td>
             <button type="button" name="renameBtn" id="renameBtn-{{$file.id}}">重命名</button> |
+            {{if eq $file.dir 1}}
+            <a href="zip?fileIds={{$file.id}}"> 下载 </a>|
+            {{else}}
             <a href="file/download?fileId={{$file.id}}"> 下载 </a>|
+            {{end}}
             <button name="deleteBtn" id="deleteBtn-{{$file.id}}">删除</button> |
             <a href="file/detail?fileId={{$file.id}}">文件详情</a> 
         </td>
@@ -255,13 +259,7 @@
             $("[name='checkbox']:checked").each(function () {
                 ids += this.id.substring(9)+","
             })
-            alert(ids)
-            $.get(
-                "/file/download",
-                {
-                    "fileId": ids
-                }
-            )
+            window.location.href="/zip?fileIds=" + ids
         })
     })
 </script>

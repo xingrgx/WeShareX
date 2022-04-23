@@ -11,3 +11,14 @@ type DirUploadReq struct {
 type DirUploadRes struct {
 
 }
+
+
+type ZipReq struct {
+	g.Meta `path:"/zip" method:"get" summary:"下载多个文件或文件夹" tags:"文件夹"`
+	FileIds string `json:"fileIds"`
+}
+
+
+type ZipRes struct {
+
+}
