@@ -1,0 +1,62 @@
+<input id="storeFileIds" type="hidden" />
+<input id="storeParentId" type="hidden" />
+<div id="moveDiv">
+    
+    <ul>
+        <li>
+            <a href="" id='moveto-{{index .Data.filesMap 0 "parentId"}}' onclick="moveto()">移动至此 </a>↓↓
+            <ul>
+                {{range $key, $file := .Data.filesMap}}
+                <li> <a href="" id="expand-{{$file.id}}" onclick="setHref()">展开</a> >> 
+                    {{$file.name}} <<
+                    <a href="" id="moveto-{{$file.id}}" onclick="moveto()">移动至此</a>
+                </li>
+                {{end}}
+            </ul>
+        </li>
+    </ul>
+   
+</div>
+
+<script text="type/javascript">
+
+    var url = window.location.href
+    var fileIds = getURLString("fileIds")
+    var dirId = getURLString("dirId")
+    document.getElementById("storeFileIds").setAttribute("value", fileIds)
+    document.getElementById("storeDirId").setAttribute("value", dirId)
+    function setHref() {
+        var hrefId = event.currentTarget.id
+        var fileId = hrefId.substring(7)
+        alert(fileId)
+        document.getElementById(hrefId).setAttribute("href", "/file/move?dir=1&fileIds="+fileIds+"&dirId="+fileId)
+    }
+    function moveto() {
+        var hrefId = event.currentTarget.id
+        var fileId = hrefId.substring(7)
+        alert(fileId)
+        document.getElementById(hrefId).setAttribute("href", "/file/moveto?fileIds="+fileIds+"&dirId="+fileId)
+    }
+    function changeURLArg(url,arg,arg_val){
+        var pattern=arg+'=([^&]*)';
+        var replaceText=arg+'='+arg_val; 
+        if(url.match(pattern)){
+            var tmp='/('+ arg+'=)([^&]*)/gi';
+            tmp=url.replace(eval(tmp),replaceText);
+            return tmp;
+        }else{ 
+            if(url.match('[\?]')){ 
+                return url+'&'+replaceText; 
+            }else{ 
+                return url+'?'+replaceText; 
+            } 
+        }
+    }
+    function getURLString(arg) { 
+        var reg = new RegExp("(^|&)" + arg + "=([^&]*)(&|$)", "i"); 
+        var r = window.location.search.substr(1).match(reg); 
+        if (r != null) 
+            return unescape(r[2]);
+        return null; 
+    }
+</script>

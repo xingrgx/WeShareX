@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/xingrgx/WeShareX/internal/model/entity"
 )
@@ -29,7 +30,7 @@ func deleteDirRecursively(ctx context.Context, dirId string, userId uint) (err e
 		return
 	}
 	if file.Dir == 1 {
-		filesMap, _ := File().GetDirFiles(ctx, userId, dirId, 0, 0)
+		filesMap, _ := File().GetDirFiles(ctx, userId, dirId, 0, 0, 0)
 		var files []*entity.File
 		gconv.Structs(filesMap, &files)
 		for _, file := range files {
@@ -103,4 +104,21 @@ func zipFile(file *os.File, prefix string, writer *zip.Writer) error {
 		}
 	}
 	return nil
+}
+
+func (sd *sDirectory) Move(ctx context.Context, userId uint, dirId, parentId string) (err error) {
+	file, err := File().GetFileByFileIdAndUserId(ctx, dirId, userId)
+	if err != nil {
+		return gerror.New("移动失败")
+	}
+	File().Move(ctx, userId, file.Id, parentId)
+	if file.Dir == 1 {
+		filesMap, _ := File().GetDirFiles(ctx, userId, dirId, 0, 0, 0)
+		var files []*entity.File
+		gconv.Structs(filesMap, &files)
+		for _, file := range files {
+			sd.Move(ctx, userId, file.Id, file.ParentId)
+		}
+	}
+	return
 }

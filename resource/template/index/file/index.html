@@ -261,5 +261,13 @@
             })
             window.location.href="/zip?fileIds=" + ids
         })
+
+        $("#moveBarBtn").click(function() {
+            var ids = ""
+            $("[name='checkbox']:checked").each(function () {
+                ids += this.id.substring(9)+","
+            })
+            document.location.href = "/file/move?dir=1&fileIds="+ids
+        })
     })
 </script>

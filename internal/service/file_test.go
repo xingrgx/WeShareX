@@ -68,6 +68,8 @@ func Test_GetFileByFileNamePathAndUserId(t *testing.T) {
 }
 
 func Test_GetDirFiles(t *testing.T) {
-	m, _ := service.File().GetDirFiles(ctx, 1, "1vlyjjj4uc0cje8aq4455eo190skcs6g", 1, 10)
-	g.Dump(m)
+	gtest.C(t, func(t *gtest.T) {
+		m, _ := service.File().GetDirFiles(ctx, 1, "root", 1, 0,0)
+		g.Dump(m)
+	})
 }

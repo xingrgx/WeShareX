@@ -114,12 +114,21 @@ func (sf *sFile) GetFileAbsoluteParentPath(ctx context.Context, userId uint, par
 }
 
 // GetDirFiles 获取指定文件夹下的所有文件
-func (sf *sFile) GetDirFiles(ctx context.Context, userId uint, parentId string, page, size int) (filesMap []g.Map, err error) {
+func (sf *sFile) GetDirFiles(ctx context.Context, userId uint, parentId string, dir, page, size int) (filesMap []g.Map, err error) {
 	var filesArr []entity.File
-	dao.File.Ctx(ctx).Where(g.Map{
-		dao.File.Columns().ParentId: parentId,
-		dao.File.Columns().UserId:   userId,
-	}).Page(page, size).OrderDesc(dao.File.Columns().UpdateAt).Scan(&filesArr)
+	if dir == 0 {
+		dao.File.Ctx(ctx).Where(g.Map{
+			dao.File.Columns().UserId:   userId,
+			dao.File.Columns().ParentId: parentId,
+		}).Page(page, size).OrderDesc(dao.File.Columns().UpdateAt).Scan(&filesArr)
+	}
+	if dir == 1 {
+		dao.File.Ctx(ctx).Where(g.Map{
+			dao.File.Columns().UserId:   userId,
+			dao.File.Columns().ParentId: parentId,
+			dao.File.Columns().Dir:      1,
+		}).Page(page, size).OrderDesc(dao.File.Columns().UpdateAt).Scan(&filesArr)
+	}
 	for _, file := range filesArr {
 		filesMap = append(filesMap, gconv.Map(file))
 	}
@@ -170,9 +179,9 @@ func (sf *sFile) GetFilePathByFileIdAndUserId(ctx context.Context, fileId string
 }
 
 // IsFile 根据ID判断是文件（true）还是文件夹（false）
-func (sf *sFile) IsFile(ctx context.Context, id string) (is bool){
+func (sf *sFile) IsFile(ctx context.Context, id string) (is bool) {
 	dir, _ := dao.File.Ctx(ctx).Fields(dao.File.Columns().Dir).Where(g.Map{
-		dao.File.Columns().Id:     id,
+		dao.File.Columns().Id: id,
 	}).Value()
 	return dir.Int() == 0
 }
@@ -195,7 +204,7 @@ func deleteFileFromDisk(ctx context.Context, fileId string, userId uint) (err er
 	root := File().GetFilesRoot(ctx)
 	filePath := "./" + root + file.Path
 	os.Remove(filePath)
-	return 
+	return
 }
 
 // GetFileByFileNamePathAndUserId 根据文件名、文件路径和用户ID查询文件
@@ -206,4 +215,54 @@ func (sf *sFile) GetFileByFileNamePathAndUserId(ctx context.Context, name, path 
 		dao.File.Columns().UserId: userId,
 	}).Scan(&file)
 	return
+}
+
+// Move 移动文件（fileId）到指定文件夹（dirId）下
+func (sf *sFile) Move(ctx context.Context, userId uint, fileId, dirId string) error {
+	dirPath, err := sf.GetFilePathByFileIdAndUserId(ctx, dirId, userId)
+	if err != nil {
+		return gerror.New("移动失败")
+	}
+	file, err := sf.GetFileByFileIdAndUserId(ctx, fileId, userId)
+	src := sf.GetFilesRoot(ctx) + file.Path
+	if err != nil {
+		return gerror.New("移动失败")
+	}
+	_, err = dao.File.Ctx(ctx).Data(g.Map{
+		dao.File.Columns().ParentId: dirId,
+		dao.File.Columns().Path:     dirPath + "/" + file.Name,
+	}).Where(g.Map{
+		dao.File.Columns().Id:     fileId,
+		dao.File.Columns().UserId: userId,
+	}).Update()
+	if err != nil {
+		return gerror.New("移动失败")
+	}
+	absPath := sf.GetFilesRoot(ctx) + "/" + dirPath
+	dest := absPath + "/" + file.Name
+	// 若absPath不存在，则创建之
+	isExists, _ := PathIsExists(absPath)
+	if !isExists {
+		os.Mkdir(absPath, os.ModePerm)
+	}
+	err = os.Rename(src, dest)
+	if err != nil {
+		return gerror.New("移动失败")
+	}
+	return nil
+}
+
+// PathIsExists 判断文件或文件夹是否在磁盘上
+func PathIsExists(path string) (bool, error) {
+	_, err := os.Stat(path)
+	// 文件或文件夹存在
+	if err == nil {
+		return true, nil
+	}
+	// err 为文件或文件夹不存在的错误
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	// err 为其他错误，不确定文件或文件夹是否存在
+	return false, err
 }

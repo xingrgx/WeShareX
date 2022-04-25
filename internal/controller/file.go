@@ -6,6 +6,7 @@ import (
 
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/text/gstr"
 	"github.com/gogf/gf/v2/util/gpage"
 	"github.com/gogf/gf/v2/util/guid"
 	v1 "github.com/xingrgx/WeShareX/api/v1"
@@ -20,16 +21,16 @@ var File cFile
 // Index 控制展示文件上传页面
 func (cf *cFile) IndexFiles(ctx context.Context, req *v1.IndexFilesReq) (res *v1.IndexFilesRes, err error) {
 	userId := service.Context().Get(ctx).User.Id
-	filesMap, err := service.File().GetDirFiles(ctx, userId, req.ParentId, req.Page, req.Size)
+	filesMap, err := service.File().GetDirFiles(ctx, userId, req.ParentId, req.Dir, req.Page, req.Size)
 	totalSize, _ := service.File().CountDirFiles(ctx, userId, req.ParentId)
 	page := g.RequestFromCtx(ctx).GetPage(totalSize, req.Size)
 	breadCrumbs := service.View().GetBreadCrumbView(ctx, req.ParentId)
-	currentPathId := breadCrumbs[len(breadCrumbs) - 1].CurrentPathId
+	currentPathId := breadCrumbs[len(breadCrumbs)-1].CurrentPathId
 	service.View().Render(ctx, model.View{
 		Title: "资源上传",
 		Data: g.Map{
-			"page":     pageContent(page),
-			"filesMap": filesMap,
+			"page":          pageContent(page),
+			"filesMap":      filesMap,
 			"currentPathId": currentPathId,
 		},
 		BreadCrumbs: breadCrumbs,
@@ -69,7 +70,7 @@ func (cf *cFile) FileDetail(ctx context.Context, req *v1.FileDetailReq) (res *v1
 	file, err := service.File().GetFileByFileIdAndUserId(ctx, req.FileId, service.Session().GetUser(ctx).Id)
 	service.View().Render(ctx, model.View{
 		Title: "文件详情",
-		Data: file,
+		Data:  file,
 	})
 	return
 }
@@ -91,7 +92,7 @@ func (cf *cFile) FileDownload(ctx context.Context, req *v1.FileDownloadReq) (res
 	}
 	path = service.File().GetFilesRoot(ctx) + path
 	g.RequestFromCtx(ctx).Response.ServeFileDownload(path)
-	return 
+	return
 }
 
 // FilePreview 控制预览文件
@@ -112,6 +113,35 @@ func (cf *cFile) FileDelete(ctx context.Context, req *v1.FileDeleteReq) (res *v1
 		err = service.File().DeleteFileByFileIdAndUserId(ctx, req.FileId, userId)
 	} else {
 		err = service.Directory().DeleteDirByDirIdAndUserId(ctx, req.FileId, userId)
+	}
+	return
+}
+
+func (cf *cFile) ShowMove(ctx context.Context, req *v1.MoveReq) (res *v1.MoveRes, err error) {
+	filesMap, err := service.File().GetDirFiles(ctx, service.Session().GetUser(ctx).Id, req.ParentId, req.Dir, 0, 0)
+	service.View().Render(ctx, model.View{
+		Title: "移动文件",
+		Data: g.Map{
+			"filesMap": filesMap,
+		},
+	})
+	//response.Json(g.RequestFromCtx(ctx), 0, "", filesMap)
+	return
+}
+
+func (cf *cFile) FileMove(ctx context.Context, req *v1.MoveToReq) (res *v1.MoveToRes, err error) {
+	dirId := req.DirId
+	str := gstr.TrimRight(req.FileIds, ",")
+	fileIds := gstr.Split(str, ",")
+	userId := service.Session().GetUser(ctx).Id
+	g.Dump(fileIds)
+	g.Dump("移动到：" + dirId)
+	for _, fileId := range fileIds {
+		if service.File().IsFile(ctx, fileId) {
+			service.File().Move(ctx, userId, fileId, dirId)
+		} else {
+			service.Directory().Move(ctx, userId, fileId, dirId)
+		}
 	}
 	return
 }
