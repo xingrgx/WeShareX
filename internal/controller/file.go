@@ -125,7 +125,6 @@ func (cf *cFile) ShowMove(ctx context.Context, req *v1.MoveReq) (res *v1.MoveRes
 			"filesMap": filesMap,
 		},
 	})
-	//response.Json(g.RequestFromCtx(ctx), 0, "", filesMap)
 	return
 }
 
@@ -134,14 +133,34 @@ func (cf *cFile) FileMove(ctx context.Context, req *v1.MoveToReq) (res *v1.MoveT
 	str := gstr.TrimRight(req.FileIds, ",")
 	fileIds := gstr.Split(str, ",")
 	userId := service.Session().GetUser(ctx).Id
-	g.Dump(fileIds)
-	g.Dump("移动到：" + dirId)
+	dest, _ := service.File().GetFilePathByFileIdAndUserId(ctx, dirId, userId)
 	for _, fileId := range fileIds {
-		if service.File().IsFile(ctx, fileId) {
-			service.File().Move(ctx, userId, fileId, dirId)
-		} else {
-			service.Directory().Move(ctx, userId, fileId, dirId)
+		src, _ := service.File().GetFilePathByFileIdAndUserId(ctx, fileId, userId)
+		if src == dest || gstr.Contains(dest, src) {
+			service.View().Render(ctx, model.View{
+				Title: "移动失败",
+				Error: "不能将文件移动至自身目录下，请换个目录",
+			})
+			return res, gerror.New("不能将文件移动至自身目录下，请<a href='/file'>换个目录</a>")
 		}
 	}
-	return
+	for _, fileId := range fileIds {
+		if service.File().IsFile(ctx, fileId) {
+			err = service.File().Move(ctx, userId, fileId, dirId)
+		} else {
+			err = service.Directory().Move(ctx, userId, fileId, dirId)
+		}
+		if err != nil {
+			service.View().Render(ctx, model.View{
+				Title: "移动失败",
+				Error: "移动失败，请<a href='/file'>重试</a>",
+			})
+			return
+		}
+	}
+	service.View().Render(ctx, model.View{
+		Title: "移动成功",
+		Error: "移动成功，<a href='/file'>点击返回</a>",
+	})
+	return res, nil
 }

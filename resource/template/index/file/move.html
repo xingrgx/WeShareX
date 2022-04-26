@@ -4,12 +4,16 @@
     
     <ul>
         <li>
-            <a href="" id='moveto-{{index .Data.filesMap 0 "parentId"}}' onclick="moveto()">移动至此 </a>↓↓
+            {{if gt (.Data.filesMap|len) 0}}
+            <a href="" id='moveto-{{index .Data.filesMap 0 "parentId"}}' onclick="moveto()">移动至当前文件夹 </a>↓↓
+            {{else}}
+            当前文件夹为空
+            {{end}}
             <ul>
                 {{range $key, $file := .Data.filesMap}}
-                <li> <a href="" id="expand-{{$file.id}}" onclick="setHref()">展开</a> >> 
-                    {{$file.name}} <<
-                    <a href="" id="moveto-{{$file.id}}" onclick="moveto()">移动至此</a>
+                <li> <a href="" id="expand-{{$file.id}}" onclick="setHref()">展开此文件夹</a> → 
+                    {{$file.name}} ←
+                    <a href="" id="moveto-{{$file.id}}" onclick="moveto()">移动至此文件夹</a>
                 </li>
                 {{end}}
             </ul>
@@ -27,15 +31,15 @@
     document.getElementById("storeDirId").setAttribute("value", dirId)
     function setHref() {
         var hrefId = event.currentTarget.id
-        var fileId = hrefId.substring(7)
-        alert(fileId)
-        document.getElementById(hrefId).setAttribute("href", "/file/move?dir=1&fileIds="+fileIds+"&dirId="+fileId)
+        var dest = hrefId.substring(7)
+        alert(dest)
+        document.getElementById(hrefId).setAttribute("href", "/file/move?dir=1&fileIds="+fileIds+"&dirId="+dest)
     }
     function moveto() {
         var hrefId = event.currentTarget.id
-        var fileId = hrefId.substring(7)
-        alert(fileId)
-        document.getElementById(hrefId).setAttribute("href", "/file/moveto?fileIds="+fileIds+"&dirId="+fileId)
+        var dest = hrefId.substring(7)
+        alert(dest)
+        document.getElementById(hrefId).setAttribute("href", "/file/moveto?fileIds="+fileIds+"&dirId="+dest)
     }
     function changeURLArg(url,arg,arg_val){
         var pattern=arg+'=([^&]*)';
