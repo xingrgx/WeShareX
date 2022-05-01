@@ -73,3 +73,29 @@ func Test_GetDirFiles(t *testing.T) {
 		g.Dump(m)
 	})
 }
+
+
+func Test_GetMultiFilesName(t *testing.T) {
+	gtest.C(t, func(t *gtest.T) {
+		n, _ := service.File().GetMultiFilesName(ctx, []string{
+			"1vlyjjjevw0cjjdwkhwmv80100rp1d0b",
+			"1vlyjjjevw0cjjdwkipfus4500uw3o6r",
+			"1vlyjjjevw0cjjdwno7m748w00sth5ls",
+			"1vlyjjjevw0cjjdwkkiru8cm00m1e42s",
+		})
+		t.Log(n)
+	})
+	gtest.C(t, func(t *gtest.T) {
+		n, _ := service.File().GetMultiFilesName(ctx, []string{
+			"1vlyjjjevw0cjjdwkhwmv80100rp1d0b",
+			"1vlyjjjevw0cjjdwkipfus4500uw3o6r",
+		})
+		t.Log(n)
+	})
+	gtest.C(t, func(t *gtest.T) {
+		n, _ := service.File().GetMultiFilesName(ctx, []string{
+			"1vlyjjjevw0cjjdwkhwmv80100rp1d0b",
+		})
+		t.Log(n)
+	})
+}
