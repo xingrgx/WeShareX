@@ -266,3 +266,27 @@ func PathIsExists(path string) (bool, error) {
 	// err 为其他错误，不确定文件或文件夹是否存在
 	return false, err
 }
+
+func (sf *sFile) GetFileNameById(ctx context.Context, id string) (string, error) {
+	val, err := dao.File.Ctx(ctx).Fields(dao.File.Columns().Name).Where(dao.File.Columns().Id, id).Value()
+	if err != nil {
+		return "", err
+	}
+	return val.String(), nil
+}
+
+func (sf *sFile) GetMultiFilesName(ctx context.Context, ids []string) (name string, err error) {
+	if len(ids) == 1 {
+		return sf.GetFileNameById(ctx, ids[0])
+	} else {
+		n, err := sf.GetFileNameById(ctx, ids[0])
+		if err != nil {
+			return n, err
+		}
+		m, err := sf.GetFileNameById(ctx, ids[1])
+		if err != nil {
+			return m, err
+		}
+		return n + "_" + m + "......", nil
+	}
+}
