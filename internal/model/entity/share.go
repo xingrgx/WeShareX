@@ -13,12 +13,11 @@ type Share struct {
 	Id          string      `json:"id"          description:"分享ID"`
 	UserId      uint        `json:"userId"      description:"用户ID"`
 	Name        string      `json:"name"        description:"分享名"`
-	UpdateTime  *gtime.Time `json:"updateTime"  description:"更新时间"`
-	CreateTime  *gtime.Time `json:"createTime"  description:"创建时间"`
+	UpdateAt    *gtime.Time `json:"updateAt"    description:"更新时间"`
+	CreateAt    *gtime.Time `json:"createAt"    description:"创建时间"`
 	Code        string      `json:"code"        description:"提取码"`
 	Times       int         `json:"times"       description:"下载次数"`
 	NeverExpire int         `json:"neverExpire" description:"1:不过期；0:过期"`
 	ExpireTime  *gtime.Time `json:"expireTime"  description:"过期时间"`
 	Type        int         `json:"type"        description:"1:文件夹；0:文件"`
-	FileId      string      `json:"fileId"      description:"文件文件夹ID"`
 }

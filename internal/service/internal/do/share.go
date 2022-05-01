@@ -15,12 +15,11 @@ type Share struct {
 	Id          interface{} // 分享ID
 	UserId      interface{} // 用户ID
 	Name        interface{} // 分享名
-	UpdateTime  *gtime.Time // 更新时间
-	CreateTime  *gtime.Time // 创建时间
+	UpdateAt    *gtime.Time // 更新时间
+	CreateAt    *gtime.Time // 创建时间
 	Code        interface{} // 提取码
 	Times       interface{} // 下载次数
 	NeverExpire interface{} // 1:不过期；0:过期
 	ExpireTime  *gtime.Time // 过期时间
 	Type        interface{} // 1:文件夹；0:文件
-	FileId      interface{} // 文件文件夹ID
 }

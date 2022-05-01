@@ -22,14 +22,13 @@ type ShareColumns struct {
 	Id          string // 分享ID
 	UserId      string // 用户ID
 	Name        string // 分享名
-	UpdateTime  string // 更新时间
-	CreateTime  string // 创建时间
+	UpdateAt    string // 更新时间
+	CreateAt    string // 创建时间
 	Code        string // 提取码
 	Times       string // 下载次数
 	NeverExpire string // 1:不过期；0:过期
 	ExpireTime  string // 过期时间
 	Type        string // 1:文件夹；0:文件
-	FileId      string // 文件文件夹ID
 }
 
 //  shareColumns holds the columns for table wsx_share.
@@ -37,14 +36,13 @@ var shareColumns = ShareColumns{
 	Id:          "id",
 	UserId:      "user_id",
 	Name:        "name",
-	UpdateTime:  "update_time",
-	CreateTime:  "create_time",
+	UpdateAt:    "update_at",
+	CreateAt:    "create_at",
 	Code:        "code",
 	Times:       "times",
 	NeverExpire: "never_expire",
 	ExpireTime:  "expire_time",
 	Type:        "type",
-	FileId:      "file_id",
 }
 
 // NewShareDao creates and returns a new DAO object for table data access.
