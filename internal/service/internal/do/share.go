@@ -22,4 +22,5 @@ type Share struct {
 	NeverExpire interface{} // 1:不过期；0:过期
 	ExpireTime  *gtime.Time // 过期时间
 	Type        interface{} // 1:文件夹；0:文件
+	Nickname    interface{} // 分享者
 }

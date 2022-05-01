@@ -20,4 +20,5 @@ type Share struct {
 	NeverExpire int         `json:"neverExpire" description:"1:不过期；0:过期"`
 	ExpireTime  *gtime.Time `json:"expireTime"  description:"过期时间"`
 	Type        int         `json:"type"        description:"1:文件夹；0:文件"`
+	Nickname    string      `json:"nickname"    description:"分享者"`
 }

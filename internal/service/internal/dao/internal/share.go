@@ -29,6 +29,7 @@ type ShareColumns struct {
 	NeverExpire string // 1:不过期；0:过期
 	ExpireTime  string // 过期时间
 	Type        string // 1:文件夹；0:文件
+	Nickname    string // 分享者
 }
 
 //  shareColumns holds the columns for table wsx_share.
@@ -43,6 +44,7 @@ var shareColumns = ShareColumns{
 	NeverExpire: "never_expire",
 	ExpireTime:  "expire_time",
 	Type:        "type",
+	Nickname:    "nickname",
 }
 
 // NewShareDao creates and returns a new DAO object for table data access.
