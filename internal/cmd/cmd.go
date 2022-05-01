@@ -30,6 +30,7 @@ var (
 					controller.Profile,
 					controller.File,
 					controller.Directory,
+					controller.Share,
 				)
 			})
 			s.Run()

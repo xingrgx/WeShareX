@@ -2,10 +2,12 @@ package service
 
 import (
 	"context"
+	"math/rand"
+	"time"
 
-	"github.com/gogf/gf/v2/text/gstr"
 	"github.com/gogf/gf/v2/database/gdb"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/text/gstr"
 	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/gogf/gf/v2/util/guid"
 	"github.com/xingrgx/WeShareX/internal/model"
@@ -21,9 +23,9 @@ func Share() *sShare {
 
 func (ss *sShare) CreateShare(ctx context.Context, input model.ShareInput) error {
 	var (
-		str   = gstr.TrimRight(input.FileIds, ",")
-		ids   = gstr.Split(str, ",")
-		name  string
+		str  = gstr.TrimRight(input.FileIds, ",")
+		ids  = gstr.Split(str, ",")
+		name string
 	)
 
 	name, err := File().GetMultiFilesName(ctx, ids)
@@ -37,6 +39,7 @@ func (ss *sShare) CreateShare(ctx context.Context, input model.ShareInput) error
 			return err
 		}
 		s.Name = name
+		s.Code = genCode()
 		if _, err := dao.Share.Ctx(ctx).Data(s).Save(); err != nil {
 			return err
 		}
@@ -51,4 +54,30 @@ func (ss *sShare) CreateShare(ctx context.Context, input model.ShareInput) error
 		}
 		return nil
 	})
+}
+
+// genCode 随机生成四位字符串
+func genCode() string {
+	str := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	bytes := []byte(str)
+	result := []byte{}
+	rand.Seed(time.Now().UnixNano() + int64(rand.Intn(100)))
+	for i := 0; i < 4; i++ {
+		result = append(result, bytes[rand.Intn(len(bytes))])
+	}
+	return string(result)
+}
+
+func (ss *sShare) GetShareById(ctx context.Context, id string) (share *entity.Share, err error) {
+	err = dao.Share.Ctx(ctx).Where(dao.File.Columns().Id, id).Scan(&share)
+	return
+}
+
+func (ss *sShare) GetAllShares(ctx context.Context, userId uint) (shares []g.Map, err error) {
+	var arr []entity.Share
+	err = dao.Share.Ctx(ctx).Where(dao.Share.Columns().UserId, userId).Scan(&arr)
+	for _, share := range arr {
+		shares = append(shares, gconv.Map(share))
+	}
+	return
 }

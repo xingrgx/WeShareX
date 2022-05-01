@@ -269,5 +269,23 @@
             })
             document.location.href = "/file/move?dir=1&fileIds="+ids
         })
+
+        $("#shareBarBtn").click(function() {
+            var ids = ""
+            $("[name='checkbox']:checked").each(function () {
+                ids += this.id.substring(9)+","
+            })
+            document.location.href = "/share/create?fileIds=" + ids
+            // var form = document.createElement("form")
+            // form.action = "/share/create"
+            // form.method = "post"
+            // var input = document.createElement("input")
+            // input.type = "hidden"
+            // input.name = "fileIds"
+            // input.value = ids
+            // form.appendChild(input)
+            // document.body.appendChild(form)
+            // form.submit()
+        })
     })
 </script>

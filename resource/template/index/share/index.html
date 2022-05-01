@@ -1,0 +1,50 @@
+<div>
+    <textarea id="copyArea" style="width: 650px;height: 50px">
+    WeShareX......
+    </textarea>
+    <br>
+    <button type="button" onclick="copy()">复制链接</button>
+    </div>
+<table border="1">
+    <tr>
+        <th>名称</th>
+        <th>分享者</th>
+        <th>创建时间</th>
+        <th>失效时间</th>
+        <th>操作</th>
+    </tr>
+    
+    {{range $key, $share := .Data.sharesMap}}
+    <tr>
+        <th>{{$share.name}}</th>
+        <th>{{$share.nickname}}</th>
+        <th>{{$share.createAt}}</th>
+        <th>{{$share.expireAt}}</th>
+        <th>
+            取消分享 
+            | 
+            <button name="getLinkBtn" id="getLinkBtn-{{$share.id}}">获取链接</button>
+        </th>
+    </tr>
+    {{end}}
+</table>
+
+<script text="type/javascript">
+    function copy() {
+        $("#copyArea").select()
+        document.execCommand("Copy")
+        alert("复制成功")
+    }
+    $(function() {
+        $("[name='getLinkBtn']").click(function() {
+            var id = event.currentTarget.id.substring(11)
+            $.get(
+                "share/link?id="+id,
+                function(r, textStatus) {
+                    var link = "链接：http://localhost:8585/" + r.data.Url + " 提取码：" + r.data.Code
+                    $("#copyArea").val(link)
+                }
+            )
+        })
+    })
+</script>
