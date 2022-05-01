@@ -27,7 +27,7 @@ type ShareColumns struct {
 	Code        string // 提取码
 	Times       string // 下载次数
 	NeverExpire string // 1:不过期；0:过期
-	ExpireTime  string // 过期时间
+	ExpireAt    string // 过期时间
 	Type        string // 1:文件夹；0:文件
 	Nickname    string // 分享者
 }
@@ -42,7 +42,7 @@ var shareColumns = ShareColumns{
 	Code:        "code",
 	Times:       "times",
 	NeverExpire: "never_expire",
-	ExpireTime:  "expire_time",
+	ExpireAt:    "expire_at",
 	Type:        "type",
 	Nickname:    "nickname",
 }

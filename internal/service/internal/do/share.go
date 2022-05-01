@@ -20,7 +20,7 @@ type Share struct {
 	Code        interface{} // 提取码
 	Times       interface{} // 下载次数
 	NeverExpire interface{} // 1:不过期；0:过期
-	ExpireTime  *gtime.Time // 过期时间
+	ExpireAt    *gtime.Time // 过期时间
 	Type        interface{} // 1:文件夹；0:文件
 	Nickname    interface{} // 分享者
 }

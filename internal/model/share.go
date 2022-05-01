@@ -6,7 +6,7 @@ type ShareInput struct {
 	NickName    string
 	FileIds     string
 	NeverExpire bool
-	ExpireTime  string
+	ExpireAt  string
 }
 
 type ShareOutput struct {
