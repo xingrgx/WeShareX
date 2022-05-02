@@ -29,10 +29,10 @@ func (cs *cShare) ShareCreate(ctx context.Context, req *v1.ShareCreateReq) (res 
 	input := model.ShareInput{
 		Id:          id,
 		UserId:      service.Session().GetUser(ctx).Id,
-		NickName: service.Session().GetUser(ctx).Nickname,
+		NickName:    service.Session().GetUser(ctx).Nickname,
 		FileIds:     req.FileIds,
 		NeverExpire: b,
-		ExpireAt:  req.ExpireTime,
+		ExpireAt:    req.ExpireTime,
 	}
 	err = service.Share().CreateShare(ctx, input)
 	if err != nil {
@@ -50,7 +50,7 @@ func (cs *cShare) ShareList(ctx context.Context, req *v1.ShareListReq) (res *v1.
 	sharesMap, err := service.Share().GetAllShares(ctx, service.Session().GetUser(ctx).Id)
 	service.View().Render(ctx, model.View{
 		Title: "我的分享",
-		Data: g.Map {
+		Data: g.Map{
 			"sharesMap": sharesMap,
 		},
 	})
