@@ -39,7 +39,7 @@
         $("[name='getLinkBtn']").click(function() {
             var id = event.currentTarget.id.substring(11)
             $.get(
-                "share/link?id="+id,
+                "/share/link?id="+id,
                 function(r, textStatus) {
                     var link = "链接：http://localhost:8585/" + r.data.Url + " 提取码：" + r.data.Code
                     $("#copyArea").val(link)
