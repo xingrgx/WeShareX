@@ -68,3 +68,23 @@ func (cs *cShare) ShareLink(ctx context.Context, req *v1.ShareLinkReq) (res *v1.
 	response.Json(g.RequestFromCtx(ctx), 0, "", output)
 	return
 }
+
+func (cs *cShare) ShareToGet(ctx context.Context, req *v1.ShareToGetReq) (res *v1.ShareToGetRes, err error) {
+	service.View().Render(ctx, model.View{
+		Title: "提取分享",
+	})
+	return
+}
+
+func (cs *cShare) ShareGet(ctx context.Context, req *v1.ShareGetReq) (res *v1.ShareGetRes, err error) {
+	g.Dump(req.Id, req.Code)
+	share, err := service.Share().GetShareByIdAndCode(ctx, req.Id, req.Code)
+	if err != nil {
+		return
+	}
+
+	service.View().Render(ctx, model.View{
+		Data: share,
+	})
+	return
+}

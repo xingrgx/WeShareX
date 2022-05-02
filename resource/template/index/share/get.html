@@ -1,0 +1,84 @@
+<div align="center" id="getShareDiv">
+    <form action="/share/get" method="post">
+        <input name="id" id="id" hidden/>
+        <input name="code" id="code" placeholder="请输入提取码"/><br/>
+        <input name="submit" type="submit" value="提取" onclick="disapper()"/>
+        <!-- <button id="getShareBtn">提取</button> -->
+    </form>
+</div>
+
+{{if not .Data.Name}}
+
+{{else}}
+<div>
+    <textarea id="copyArea" style="width: 650px;height: 50px">
+    WeShareX......
+    </textarea>
+    <br>
+    <button type="button" onclick="copy()">复制链接</button>
+</div>
+<table border="1">
+    <tr>
+        <th>名称</th>
+        <th>分享者</th>
+        <th>创建时间</th>
+        <th>失效时间</th>
+        <th>操作</th>
+    </tr>
+    
+
+    <tr>
+        <th>{{.Data.Name}}</th>
+        <th>{{.Data.Nickname}}</th>
+        <th>{{.Data.CreateAt}}</th>
+        <th>{{.Data.ExpireAt}}</th>
+        <th>
+            下载 
+            | 
+            <button name="getLinkBtn" id="getLinkBtn-{{.Data.Id}}">获取链接</button>
+        </th>
+    </tr>
+</table>
+
+{{end}}
+
+<script text="type/javascript">
+    var id = getURLString("id")
+    document.getElementById("id").setAttribute("value", id)
+    function getURLString(arg) { 
+        var reg = new RegExp("(^|&)" + arg + "=([^&]*)(&|$)", "i"); 
+        var r = window.location.search.substr(1).match(reg); 
+        if (r != null) 
+            return unescape(r[2]);
+        return null; 
+    }
+
+    function copy() {
+        $("#copyArea").select()
+        document.execCommand("Copy")
+        alert("复制成功")
+    }
+
+    $(function() {
+        $("#getShareBtn").click(function() {
+            var code = $("#code").val()
+            $.post(
+                "/share/get",
+                {
+                    "id": id,
+                    "code": code,
+                }
+            )
+        })
+        $("[name='getLinkBtn']").click(function() {
+            var id = event.currentTarget.id.substring(11)
+            $.get(
+                "/share/link?id="+id,
+                function(r, textStatus) {
+                    var link = "链接：http://localhost:8585/" + r.data.Url + " 提取码：" + r.data.Code
+                    $("#copyArea").val(link)
+                }
+            )
+        })
+    })
+</script>

@@ -36,3 +36,18 @@ type ShareLinkReq struct {
 type ShareLinkRes struct {
 }
 
+type ShareToGetReq struct {
+	g.Meta `path:"/share/get" method:"get" summary:"提取分享页面" tags:"分享"`
+}
+
+type ShareToGetRes struct {
+}
+
+type ShareGetReq struct {
+	g.Meta `path:"/share/get" method:"post" summary:"提取分享" tags:"分享"`
+	Id     string `json:"id"`
+	Code   string `json:"code"`
+}
+
+type ShareGetRes struct {
+}

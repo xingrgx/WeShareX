@@ -81,3 +81,11 @@ func (ss *sShare) GetAllShares(ctx context.Context, userId uint) (shares []g.Map
 	}
 	return
 }
+
+func (ss *sShare) GetShareByIdAndCode(ctx context.Context, id, code string) (share *entity.Share, err error) {
+	err = dao.Share.Ctx(ctx).Where(g.Map {
+		dao.Share.Columns().Id: id,
+		dao.Share.Columns().Code: code,
+	}).Scan(&share)
+	return
+}
