@@ -31,6 +31,7 @@ var (
 					controller.File,
 					controller.Directory,
 					controller.Share,
+					controller.Chat,
 				)
 			})
 			s.Run()
