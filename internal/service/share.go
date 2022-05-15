@@ -89,3 +89,7 @@ func (ss *sShare) GetShareByIdAndCode(ctx context.Context, id, code string) (sha
 	}).Scan(&share)
 	return
 }
+
+// func (ss *sShare) Download(ctx context.Context, id, code string) (path string, err error) {
+	
+// }

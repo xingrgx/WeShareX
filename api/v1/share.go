@@ -51,3 +51,12 @@ type ShareGetReq struct {
 
 type ShareGetRes struct {
 }
+
+type ShareDownloadReq struct {
+	g.Meta `path:"/share/download" method:"get" summary:"下载分享文件" tags:"分享"`
+	Id     string `json:"id"`
+	Code   string `json:"code"`
+}
+
+type ShareDownloadRes struct {
+}

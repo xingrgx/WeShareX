@@ -88,3 +88,8 @@ func (cs *cShare) ShareGet(ctx context.Context, req *v1.ShareGetReq) (res *v1.Sh
 	})
 	return
 }
+
+func (cs *cShare) ShareDownload(ctx context.Context, req *v1.ShareDownloadReq) (res *v1.ShareDownloadRes, err error) {
+	//path, err := service.Share().Download(ctx, req.Id, req.Code)
+	return
+}

@@ -33,7 +33,7 @@
         <th>{{.Data.CreateAt}}</th>
         <th>{{.Data.ExpireAt}}</th>
         <th>
-            下载 
+            <a href="/share/download?id={{.Data.Id}}&code={{.Data.Code}}">下载</a>
             | 
             <button name="getLinkBtn" id="getLinkBtn-{{.Data.Id}}">获取链接</button>
         </th>
