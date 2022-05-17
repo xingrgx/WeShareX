@@ -16,4 +16,5 @@ type Friends struct {
 	Me     interface{} // 用户我ID
 	Friend interface{} // 好友ID
 	Time   *gtime.Time // 添加时间
+	Status interface{} // 状态 同意:1 未同意:0
 }

@@ -23,6 +23,7 @@ type FriendsColumns struct {
 	Me     string // 用户我ID
 	Friend string // 好友ID
 	Time   string // 添加时间
+	Status string // 状态 同意:1 未同意:0
 }
 
 //  friendsColumns holds the columns for table wsx_friends.
@@ -31,6 +32,7 @@ var friendsColumns = FriendsColumns{
 	Me:     "me",
 	Friend: "friend",
 	Time:   "time",
+	Status: "status",
 }
 
 // NewFriendsDao creates and returns a new DAO object for table data access.

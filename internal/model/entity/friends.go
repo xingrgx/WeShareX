@@ -14,4 +14,5 @@ type Friends struct {
 	Me     uint        `json:"me"     description:"用户我ID"`
 	Friend uint        `json:"friend" description:"好友ID"`
 	Time   *gtime.Time `json:"time"   description:"添加时间"`
+	Status uint        `json:"status" description:"状态 同意:1 未同意:0"`
 }
