@@ -15,3 +15,10 @@ func Test_GetAllFriends(t *testing.T) {
 		}
 	})
 }
+
+func Test_AddFrined(t *testing.T) {
+	gtest.C(t, func(t *gtest.T) {
+		e := service.Chat().AddFriend(ctx, 1, 25)
+		t.AssertNil(e)
+	})
+}

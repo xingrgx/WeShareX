@@ -12,7 +12,7 @@
         <td><a href="/user/{{$friend.Id}}">{{$friend.Passport}}</a></td>
         <td>
             {{if eq $friend.Status "0"}}
-                添加好友
+                <button name="add-btn" id="add-btn-{{$friend.Id}}">添加好友</button>
             {{else}}
                 发送消息 
             {{end}}
@@ -20,3 +20,41 @@
     </tr>
     {{end}}
 </table>
+
+<script type="text/javascript">
+    $(function(){
+        $("[name='add-btn']").click(function() {
+            var btnId = event.currentTarget.id
+            id = btnId.substring(8)
+            $.post(
+                "/chat/add",
+                {
+                    "id": id
+                },
+                function(r, textStatus) {
+                        if (r.code <= 0) {
+                            swal({
+                                title:   "添加好友申请发送成功，等待好友同意",
+                                text:    "",
+                                icon:    "success",
+                                timer:   2000,
+                                buttons: false
+                            }).then((value) => {
+                                if (r.redirect != "") {
+                                    window.location.href = r.redirect;
+                                } else {
+                                    window.location.href = "";
+                                }
+                            });
+                        } else {
+                            swal({
+                                text:   r.message,
+                                icon:   "warning",
+                                button: "确定",
+                            });
+                        }
+                    }
+            )
+        })
+    })
+</script>

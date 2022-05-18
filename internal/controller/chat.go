@@ -191,3 +191,12 @@ func (cc *cChat) ListFriends(ctx context.Context, req *v1.ListFriendsReq) (res *
 	})
 	return
 }
+
+func (cc *cChat) AddFriend(ctx context.Context, req *v1.AddFriendReq) (res *v1.AddFriendRes, err error) {
+	uid := service.Session().GetUser(ctx).Id
+	err = service.Chat().AddFriend(ctx, uid, gconv.Uint(req.Id))
+	if err != nil {
+		return
+	}
+	return
+}

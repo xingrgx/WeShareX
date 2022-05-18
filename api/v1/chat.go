@@ -47,3 +47,12 @@ type ListFriendsReq struct {
 type ListFriendsRes struct {
 	
 }
+
+type AddFriendReq struct {
+	g.Meta `path:"/chat/add" method:"post" tags:"通讯" summary:"添加好友"`
+	Id string `json:"id"`
+}
+
+type AddFriendRes struct {
+	
+}
