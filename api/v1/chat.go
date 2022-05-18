@@ -56,3 +56,12 @@ type AddFriendReq struct {
 type AddFriendRes struct {
 	
 }
+
+type SearchFriendReq struct {
+	g.Meta `path:"/chat/search" method:"get" tags:"通讯" summary:"查找好友"`
+	Msg string `json:"msg"`
+}
+
+type SearchFriendRes struct {
+	
+}

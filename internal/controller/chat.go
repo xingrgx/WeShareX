@@ -18,6 +18,7 @@ import (
 	"github.com/xingrgx/WeShareX/internal/consts"
 	"github.com/xingrgx/WeShareX/internal/model"
 	"github.com/xingrgx/WeShareX/internal/service"
+	"github.com/xingrgx/WeShareX/utility/response"
 )
 
 type cChat struct {
@@ -199,4 +200,16 @@ func (cc *cChat) AddFriend(ctx context.Context, req *v1.AddFriendReq) (res *v1.A
 		return
 	}
 	return
+}
+
+func (cc *cChat) SearchFriend(ctx context.Context, req *v1.SearchFriendReq) (res *v1.SearchFriendRes, err error) {
+	if friends, _ := service.User().GetUserByPassport(ctx, req.Msg); friends != nil {
+		response.Json(g.RequestFromCtx(ctx), 0, "", friends)
+		return
+	}
+	if friends, _ := service.User().GetUserByNickname(ctx, req.Msg); friends != nil {
+		response.Json(g.RequestFromCtx(ctx), 0, "", friends)
+		return
+	}
+	return res, gerror.New("查无此用户")
 }

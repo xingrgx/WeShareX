@@ -1,3 +1,14 @@
+<h3 align="center">查找好友</h3>
+
+<div align="center">
+    <input id="searchMsg" type="text" placeholder="请输入好友账号" />
+    <button id="searchFriendBtn">搜索</button>
+</div>
+
+<div id="searchFriendsRes" align="center">
+
+</div>
+
 <h3 align="center">通讯录</h3>
 
 <table border="1" align="center">
@@ -23,6 +34,27 @@
 
 <script type="text/javascript">
     $(function(){
+        $("#searchFriendBtn").click(function() {
+            var msg = $("#searchMsg").val()
+            $.get(
+                "/chat/search",
+                {
+                    "msg": msg
+                },
+                function(r) {
+                    $("#searchFriendsRes").html('<h3 align="center">查询结果</h3>')
+                    if (r.code <= 0) {
+                        var res = ""
+                        for (let i = 0; i < r.data.length; i++) {
+                            res += r.data[i].Nickname + "--" + r.data[i].Passport + "--" + r.data[i].Gender + "<br>"
+                        }
+                        $("#searchFriendsRes").html('<h3 align="center">查询结果</h3>' + res)
+                    } else {
+                        $("#searchFriendsRes").html('<h3 align="center">查询结果</h3> 查无此用户')
+                    }
+                }
+            )
+        })
         $("[name='add-btn']").click(function() {
             var btnId = event.currentTarget.id
             id = btnId.substring(8)

@@ -158,3 +158,13 @@ func (su *sUser) UpdateEmail(ctx context.Context, newEmail string) error {
 		return err
 	})
 }
+
+func (su *sUser) GetUserByPassport(ctx context.Context, passport string) (users []*model.UserProfileOutput, err error) {
+	err = dao.User.Ctx(ctx).Where(dao.User.Columns().Passport, passport).Scan(&users)
+	return
+}
+
+func (su *sUser) GetUserByNickname(ctx context.Context, nickname string) (users []*model.UserProfileOutput, err error) {
+	err = dao.User.Ctx(ctx).Where(dao.User.Columns().Nickname, nickname).Scan(&users)
+	return
+}
