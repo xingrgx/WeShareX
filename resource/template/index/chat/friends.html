@@ -1,1 +1,22 @@
-friends
+<h3 align="center">通讯录</h3>
+
+<table border="1" align="center">
+    <tr>
+        <th>好友昵称</th>
+        <th>好友账号</th>
+        <th></th>
+    </tr>
+    {{range $key, $friend := .Data.Friends}}
+    <tr>
+        <td>{{$friend.Nickname}}</td>
+        <td><a href="/user/{{$friend.Id}}">{{$friend.Passport}}</a></td>
+        <td>
+            {{if eq $friend.Status "0"}}
+                添加好友
+            {{else}}
+                发送消息 
+            {{end}}
+        </td>
+    </tr>
+    {{end}}
+</table>

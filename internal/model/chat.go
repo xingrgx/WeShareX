@@ -6,3 +6,11 @@ type ChatMsg struct {
 	Data interface{} `json:"data" v:"required"`
 	From string      `json:"name" v:""`
 }
+
+// FriendProfile 通讯录展示的好友信息
+type FriendProfile struct {
+	Id uint
+	Passport string
+	Nickname string
+	Status int
+}

@@ -39,3 +39,11 @@ type ChatWebsocketReq struct {
 type ChatWebsocketRes struct {
 	g.Meta `mime:"text/html" type:"string" example:"<html/>" dc:"It redirects to homepage if success"`
 }
+
+type ListFriendsReq struct {
+	g.Meta `path:"/chat/friends" method:"get" tags:"通讯" summary:"查询通讯录"`
+}
+
+type ListFriendsRes struct {
+	
+}
