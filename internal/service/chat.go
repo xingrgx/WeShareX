@@ -5,9 +5,8 @@ import (
 
 	"github.com/gogf/gf/v2/database/gdb"
 	"github.com/gogf/gf/v2/frame/g"
-	"github.com/gogf/gf/v2/util/gconv"
+	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/xingrgx/WeShareX/internal/model"
-	"github.com/xingrgx/WeShareX/internal/model/entity"
 	"github.com/xingrgx/WeShareX/internal/service/internal/dao"
 )
 
@@ -24,24 +23,21 @@ func (sc *sChat) GetAllFriends(id uint) (friends []*model.FriendProfile, err err
 }
 
 func (sc *sChat) AddFriend(ctx context.Context, userId, friendId uint) (err error) {
-	var me, friend *entity.Friends
-	if err = gconv.Struct(g.Map{
-		"Me":     userId,
-		"Friend": friendId,
-	}, &me); err != nil {
-		return err
-	}
-	if err = gconv.Struct(g.Map{
-		"Me":     friendId,
-		"Friend": userId,
-	}, &friend); err != nil {
-		return err
-	}
 	return dao.Friends.Transaction(ctx, func(ctx context.Context, tx *gdb.TX) error {
-		if _, e := dao.Friends.Ctx(ctx).Data(me).Save(); e != nil {
+		if _, e := dao.Friends.Ctx(ctx).Data(g.Map{
+			dao.Friends.Columns().Me:     userId,
+			dao.Friends.Columns().Friend: friendId,
+			dao.Friends.Columns().Status: 0,
+			dao.Friends.Columns().Time:   gtime.Now(),
+		}).Save(); e != nil {
 			return e
 		}
-		if _, e := dao.Friends.Ctx(ctx).Data(friend).Save(); e != nil {
+		if _, e := dao.Friends.Ctx(ctx).Data(g.Map{
+			dao.Friends.Columns().Me:     friendId,
+			dao.Friends.Columns().Friend: userId,
+			dao.Friends.Columns().Status: 0,
+			dao.Friends.Columns().Time:   gtime.Now(),
+		}).Save(); e != nil {
 			return e
 		}
 		return nil
