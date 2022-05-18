@@ -22,7 +22,7 @@ type FriendsColumns struct {
 	Id     string // ID
 	Me     string // 用户我ID
 	Friend string // 好友ID
-	Time   string // 添加时间
+	AddAt  string // 添加时间
 	Status string // 状态 同意:1 未同意:0
 }
 
@@ -31,7 +31,7 @@ var friendsColumns = FriendsColumns{
 	Id:     "id",
 	Me:     "me",
 	Friend: "friend",
-	Time:   "time",
+	AddAt:  "add_at",
 	Status: "status",
 }
 
