@@ -218,3 +218,18 @@ func (cc *cChat) Agree(ctx context.Context, req *v1.AgreeReq) (res *v1.AgreeRes,
 	err = service.Chat().SetStatusTo2ById(ctx, service.Session().GetUser(ctx).Id, gconv.Uint(req.Id))
 	return
 }
+
+func (cc *cChat) IndexChat(ctx context.Context, req *v1.ChatIndexReq) (res *v1.ChatIndexRes, err error) {
+	f, err := service.User().GetUserProfileByID(ctx, req.Id)
+	if err != nil {
+		return
+	} else {
+		service.View().Render(ctx, model.View{
+			Title: "好友通讯",
+			Data: g.Map {
+				"Friend": f,
+			},
+		})
+		return
+	}
+}

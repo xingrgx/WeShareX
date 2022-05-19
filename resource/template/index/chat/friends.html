@@ -28,7 +28,7 @@
             {{else if eq $friend.Status "0"}}
                 <button name="agreeBtn" id="agreeBtn-{{$friend.Id}}">同意好友请求</button>
             {{else}}
-                发送消息
+                <a href="/chat?id={{$friend.Id}}">发送消息</a>
             {{end}}
         </td>
     </tr>

@@ -20,6 +20,7 @@ type IndexChatRoomRes struct {
 
 type ChatIndexReq struct {
 	g.Meta `path:"/chat" method:"get"  tags:"ChatService" summary:"Home page"`
+	Id uint `json:"id"`
 }
 type ChatIndexRes struct {
 	g.Meta `mime:"text/html" type:"string" example:"<html/>"`
