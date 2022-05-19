@@ -213,3 +213,8 @@ func (cc *cChat) SearchFriend(ctx context.Context, req *v1.SearchFriendReq) (res
 	}
 	return res, gerror.New("查无此用户")
 }
+
+func (cc *cChat) Agree(ctx context.Context, req *v1.AgreeReq) (res *v1.AgreeRes, err error) {
+	err = service.Chat().SetStatusTo2ById(ctx, service.Session().GetUser(ctx).Id, gconv.Uint(req.Id))
+	return
+}

@@ -24,7 +24,7 @@
             {{if eq $friend.Status "1"}}
                 等待好友同意
             {{else if eq $friend.Status "0"}}
-                同意好友请求
+                <button name="agreeBtn" id="agreeBtn-{{$friend.Id}}">同意好友请求</button>
             {{else}}
                 发送消息
             {{end}}
@@ -69,6 +69,40 @@
         )
     })
     $(function(){
+        $("[name='agreeBtn']").click(function() {
+            var btnId = event.currentTarget.id
+            id = btnId.substring(9)
+            $.get(
+                "/chat/agree",
+                {
+                    "id": id,
+                },
+                function(r, textStatus) {
+                if (r.code <= 0) {
+                    swal({
+                        title:   "添加好友成功",
+                        text:    "可以开始聊天了",
+                        icon:    "success",
+                        timer:   2000,
+                        buttons: false
+                    }).then((value) => {
+                        if (r.redirect != "") {
+                            window.location.href = r.redirect;
+                        } else {
+                            window.location.href = "";
+                        }
+                    });
+                } else {
+                    swal({
+                        text:   r.message,
+                        icon:   "warning",
+                        button: "确定",
+                    });
+                }
+            }
+            )
+        })
+
         $("#searchFriendBtn").click(function() {
             var msg = $("#searchMsg").val()
             $.get(
@@ -83,7 +117,6 @@
                         for (let i = 0; i < r.data.length; i++) {
                             res += r.data[i].Nickname + "--" + r.data[i].Passport + "--" + r.data[i].Gender + "<button class='addFriendBtn' id='add-btn-" + r.data[i].Id + "'>添加好友</button><br>"
                         }
-                        alert(res)
                         $("#searchFriendsRes").html('<h3 align="center">查询结果</h3>' + res)
                     } else {
                         $("#searchFriendsRes").html('<h3 align="center">查询结果</h3> 查无此用户')

@@ -65,3 +65,12 @@ type SearchFriendReq struct {
 type SearchFriendRes struct {
 	
 }
+
+type AgreeReq struct {
+	g.Meta `path:"/chat/agree" method:"get" tags:"通讯" summary:"同意请求"`
+	Id string `json:"id"`
+}
+
+type AgreeRes struct {
+	
+}

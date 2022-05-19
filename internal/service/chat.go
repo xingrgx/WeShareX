@@ -43,3 +43,21 @@ func (sc *sChat) AddFriend(ctx context.Context, userId, friendId uint) (err erro
 		return nil
 	})
 }
+
+func (sc *sChat) SetStatusTo2ById(ctx context.Context, userId, friendId uint) (err error) {
+	return dao.Friends.Transaction(ctx, func(ctx context.Context, tx *gdb.TX) error {
+		if _, err = dao.Friends.Ctx(ctx).Where(g.Map {
+			dao.Friends.Columns().Me: userId,
+			dao.Friends.Columns().Friend: friendId,
+		}).Data(dao.Friends.Columns().Status, 2).Update(); err != nil {
+			return err
+		}
+		if _, err = dao.Friends.Ctx(ctx).Where(g.Map {
+			dao.Friends.Columns().Me: friendId,
+			dao.Friends.Columns().Friend: userId,
+		}).Data(dao.Friends.Columns().Status, 2).Update(); err != nil {
+			return err
+		}
+		return nil
+	})
+}
