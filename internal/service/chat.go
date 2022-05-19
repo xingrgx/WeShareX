@@ -27,7 +27,7 @@ func (sc *sChat) AddFriend(ctx context.Context, userId, friendId uint) (err erro
 		if _, e := dao.Friends.Ctx(ctx).Data(g.Map{
 			dao.Friends.Columns().Me:     userId,
 			dao.Friends.Columns().Friend: friendId,
-			dao.Friends.Columns().Status: 0,
+			dao.Friends.Columns().Status: 1,
 			dao.Friends.Columns().Time:   gtime.Now(),
 		}).Save(); e != nil {
 			return e

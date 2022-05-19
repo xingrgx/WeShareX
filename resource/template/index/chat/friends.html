@@ -21,10 +21,12 @@
         <td>{{$friend.Nickname}}</td>
         <td><a href="/user/{{$friend.Id}}">{{$friend.Passport}}</a></td>
         <td>
-            {{if eq $friend.Status "0"}}
+            {{if eq $friend.Status "1"}}
                 等待好友同意
+            {{else if eq $friend.Status "0"}}
+                同意好友请求
             {{else}}
-                发送消息 
+                发送消息
             {{end}}
         </td>
     </tr>
