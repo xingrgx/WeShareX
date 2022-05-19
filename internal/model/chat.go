@@ -9,8 +9,9 @@ type ChatMsg struct {
 
 // FriendProfile 通讯录展示的好友信息
 type FriendProfile struct {
-	Id uint
+	Id       uint
 	Passport string
 	Nickname string
-	Status int
+	Gender   int
+	Status   int
 }

@@ -14,12 +14,14 @@
     <tr>
         <th>好友昵称</th>
         <th>好友账号</th>
+        <th>性别</th>
         <th></th>
     </tr>
     {{range $key, $friend := .Data.Friends}}
     <tr>
         <td>{{$friend.Nickname}}</td>
         <td><a href="/user/{{$friend.Id}}">{{$friend.Passport}}</a></td>
+        <td>{{if eq $friend.Gender "0"}}未知{{else if eq $friend.Gender "1"}}男{{else}}女{{end}}</td>
         <td>
             {{if eq $friend.Status "1"}}
                 等待好友同意
@@ -34,7 +36,6 @@
 </table>
 
 <script type="text/javascript">
-    
     $(document).on("click", ".addFriendBtn", function() {
         var btnId = $(this).attr("id")
         var id = btnId.substring(8)
@@ -112,12 +113,27 @@
                 },
                 function(r) {
                     $("#searchFriendsRes").html('<h3 align="center">查询结果</h3>')
+                    
                     if (r.code <= 0) {
-                        var res = ""
+                        var res = '<table border="1" align="center"><tr><th>好友昵称</th><th>好友账号</th><th>性别</th><th></th></tr>'
                         for (let i = 0; i < r.data.length; i++) {
-                            res += r.data[i].Nickname + "--" + r.data[i].Passport + "--" + r.data[i].Gender + "<button class='addFriendBtn' id='add-btn-" + r.data[i].Id + "'>添加好友</button><br>"
+                            var gender = ""
+                            switch (r.data[i].Gender) {
+                                case 0:
+                                    gender = "未知"
+                                    break;
+                                case 1:
+                                    gender = "男"
+                                    break;
+                                case 2:
+                                    gender = "女"
+                                    break;
+                                default:
+                                    break;
+                            }
+                            res += '<tr><td>'+r.data[i].Nickname+'</td><td>'+r.data[i].Passport+'</td><td>'+gender+'</td><td>'+"<button class='addFriendBtn' id='add-btn-" + r.data[i].Id + "'>添加好友</button><br>"+'</td></tr>'
                         }
-                        $("#searchFriendsRes").html('<h3 align="center">查询结果</h3>' + res)
+                        $("#searchFriendsRes").html('<h3 align="center">查询结果</h3>' + res + '</table>')
                     } else {
                         $("#searchFriendsRes").html('<h3 align="center">查询结果</h3> 查无此用户')
                     }
