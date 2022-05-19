@@ -6,7 +6,6 @@
 </div>
 
 <div id="searchFriendsRes" align="center">
-
 </div>
 
 <h3 align="center">通讯录</h3>
@@ -23,7 +22,7 @@
         <td><a href="/user/{{$friend.Id}}">{{$friend.Passport}}</a></td>
         <td>
             {{if eq $friend.Status "0"}}
-                <button name="add-btn" id="add-btn-{{$friend.Id}}">添加好友</button>
+                等待好友同意
             {{else}}
                 发送消息 
             {{end}}
@@ -33,6 +32,40 @@
 </table>
 
 <script type="text/javascript">
+    
+    $(document).on("click", ".addFriendBtn", function() {
+        var btnId = $(this).attr("id")
+        var id = btnId.substring(8)
+        $.post(
+            "/chat/add",
+            {
+                "id": id
+            },
+            function(r, textStatus) {
+                if (r.code <= 0) {
+                    swal({
+                        title:   "添加好友申请发送成功，等待好友同意",
+                        text:    "",
+                        icon:    "success",
+                        timer:   2000,
+                        buttons: false
+                    }).then((value) => {
+                        if (r.redirect != "") {
+                            window.location.href = r.redirect;
+                        } else {
+                            window.location.href = "";
+                        }
+                    });
+                } else {
+                    swal({
+                        text:   r.message,
+                        icon:   "warning",
+                        button: "确定",
+                    });
+                }
+            }
+        )
+    })
     $(function(){
         $("#searchFriendBtn").click(function() {
             var msg = $("#searchMsg").val()
@@ -46,46 +79,14 @@
                     if (r.code <= 0) {
                         var res = ""
                         for (let i = 0; i < r.data.length; i++) {
-                            res += r.data[i].Nickname + "--" + r.data[i].Passport + "--" + r.data[i].Gender + "<br>"
+                            res += r.data[i].Nickname + "--" + r.data[i].Passport + "--" + r.data[i].Gender + "<button class='addFriendBtn' id='add-btn-" + r.data[i].Id + "'>添加好友</button><br>"
                         }
+                        alert(res)
                         $("#searchFriendsRes").html('<h3 align="center">查询结果</h3>' + res)
                     } else {
                         $("#searchFriendsRes").html('<h3 align="center">查询结果</h3> 查无此用户')
                     }
                 }
-            )
-        })
-        $("[name='add-btn']").click(function() {
-            var btnId = event.currentTarget.id
-            id = btnId.substring(8)
-            $.post(
-                "/chat/add",
-                {
-                    "id": id
-                },
-                function(r, textStatus) {
-                        if (r.code <= 0) {
-                            swal({
-                                title:   "添加好友申请发送成功，等待好友同意",
-                                text:    "",
-                                icon:    "success",
-                                timer:   2000,
-                                buttons: false
-                            }).then((value) => {
-                                if (r.redirect != "") {
-                                    window.location.href = r.redirect;
-                                } else {
-                                    window.location.href = "";
-                                }
-                            });
-                        } else {
-                            swal({
-                                text:   r.message,
-                                icon:   "warning",
-                                button: "确定",
-                            });
-                        }
-                    }
             )
         })
     })
