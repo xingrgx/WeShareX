@@ -241,6 +241,9 @@ func (cc *cChat) ListMsg(ctx context.Context, req *v1.ListMsgReq) (res *v1.ListM
 }
 
 func (cc *cChat) Chat(ctx context.Context, req *v1.ChatReq) (res *v1.ChatRes, err error) {
-	err = service.Chat().SaveMsg(ctx, req.Id, req.Msg)
+	if req.Msg == "" {
+		return res, gerror.New("不能为空")
+	}
+	err = service.Chat().SaveMsg(ctx, service.Session().GetUser(ctx).Id, req.Id, req.Msg)
 	return
 }

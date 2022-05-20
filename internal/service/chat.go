@@ -72,7 +72,7 @@ func (sc *sChat) GetAllMsgs(ctx context.Context, userId, friendId uint) (msgs []
 	}).WhereOr(g.Map{
 		dao.Record.Columns().SenderId:   friendId,
 		dao.Record.Columns().ReceiverId: userId,
-	}).Scan(&records)
+	}).OrderAsc(dao.Record.Columns().Id).Scan(&records)
 	gconv.Structs(records, &msgs)
 	for _, msg := range msgs {
 		msg.Sender = User().GetNicknameById(ctx, msg.SenderId)
@@ -81,6 +81,12 @@ func (sc *sChat) GetAllMsgs(ctx context.Context, userId, friendId uint) (msgs []
 	return
 }
 
-func (sc *sChat) SaveMsg(ctx context.Context, userId uint, msg string) (err error) {
+func (sc *sChat) SaveMsg(ctx context.Context, senderId, receiverId uint, msg string) (err error) {
+	_, err = dao.Record.Ctx(ctx).Data(g.Map {
+		dao.Record.Columns().SenderId: senderId,
+		dao.Record.Columns().ReceiverId: receiverId,
+		dao.Record.Columns().Content: msg,
+		dao.Record.Columns().Time: gtime.Now(),
+	}).Save()
 	return
 }

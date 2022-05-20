@@ -18,14 +18,36 @@
         function(r) {
             if (r.code <= 0) {
                 for (let i = 0; i < r.data.length; i++) {
-                    $("#history").append(r.data[i].Sender + "说：" + r.data[i].Content + "<br>")
+                    if (r.data[i].SenderId == id) {
+                        $("#history").append("<p align='left'>"+r.data[i].Time + ":" + r.data[i].Sender + "说：" + r.data[i].Content + "</p>")
+                    } else {
+                        $("#history").append("<p align='right'>"+r.data[i].Time + ":" + r.data[i].Sender + "说：" + r.data[i].Content + "</p>")
+                    }
+                    
                 }
             }
         }
     )
     $("#sendMsgBtn").click(function() {
-       
-        alert(id)
+        var msg = $("#message").val()
+        if (msg=="") {
+            alert("消息不能为空")
+            return
+        }
+        $.post(
+            "/chat",
+            {
+                "id": id,
+                "msg": msg
+            },
+            function(r) {
+                if (r.code > 0) {
+                    alert("发送失败")
+                } else {
+                    location.reload()
+                }
+            }
+        )
 
     })
 
