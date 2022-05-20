@@ -22,3 +22,13 @@ func Test_AddFrined(t *testing.T) {
 		t.AssertNil(e)
 	})
 }
+
+func Test_GetAllMsgs(t *testing.T) {
+	gtest.C(t, func(t *gtest.T) {
+		s, _ := service.Chat().GetAllMsgs(ctx, 1, 22)
+		for i, r := range s {
+			t.Log(i, r)
+		}
+		
+	})
+}

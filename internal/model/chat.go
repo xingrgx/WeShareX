@@ -1,5 +1,7 @@
 package model
 
+import "github.com/gogf/gf/v2/os/gtime"
+
 // ChatMsg 公共聊天室信息结构
 type ChatMsg struct {
 	Type string      `json:"type" v:"required"`
@@ -14,4 +16,15 @@ type FriendProfile struct {
 	Nickname string
 	Gender   int
 	Status   int
+}
+
+// user、record联查
+type CMsg struct {
+	Sender     string
+	Receiver   string
+	Id         string
+	SenderId   uint
+	ReceiverId uint
+	Content    string
+	Time       *gtime.Time
 }

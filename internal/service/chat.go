@@ -6,7 +6,9 @@ import (
 	"github.com/gogf/gf/v2/database/gdb"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gtime"
+	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/xingrgx/WeShareX/internal/model"
+	"github.com/xingrgx/WeShareX/internal/model/entity"
 	"github.com/xingrgx/WeShareX/internal/service/internal/dao"
 )
 
@@ -46,18 +48,39 @@ func (sc *sChat) AddFriend(ctx context.Context, userId, friendId uint) (err erro
 
 func (sc *sChat) SetStatusTo2ById(ctx context.Context, userId, friendId uint) (err error) {
 	return dao.Friends.Transaction(ctx, func(ctx context.Context, tx *gdb.TX) error {
-		if _, err = dao.Friends.Ctx(ctx).Where(g.Map {
-			dao.Friends.Columns().Me: userId,
+		if _, err = dao.Friends.Ctx(ctx).Where(g.Map{
+			dao.Friends.Columns().Me:     userId,
 			dao.Friends.Columns().Friend: friendId,
 		}).Data(dao.Friends.Columns().Status, 2).Update(); err != nil {
 			return err
 		}
-		if _, err = dao.Friends.Ctx(ctx).Where(g.Map {
-			dao.Friends.Columns().Me: friendId,
+		if _, err = dao.Friends.Ctx(ctx).Where(g.Map{
+			dao.Friends.Columns().Me:     friendId,
 			dao.Friends.Columns().Friend: userId,
 		}).Data(dao.Friends.Columns().Status, 2).Update(); err != nil {
 			return err
 		}
 		return nil
 	})
+}
+
+func (sc *sChat) GetAllMsgs(ctx context.Context, userId, friendId uint) (msgs []*model.CMsg, err error) {
+	var records []*entity.Record
+	err = dao.Record.Ctx(ctx).Where(g.Map{
+		dao.Record.Columns().SenderId:   userId,
+		dao.Record.Columns().ReceiverId: friendId,
+	}).WhereOr(g.Map{
+		dao.Record.Columns().SenderId:   friendId,
+		dao.Record.Columns().ReceiverId: userId,
+	}).Scan(&records)
+	gconv.Structs(records, &msgs)
+	for _, msg := range msgs {
+		msg.Sender = User().GetNicknameById(ctx, msg.SenderId)
+		msg.Receiver = User().GetNicknameById(ctx, msg.ReceiverId)
+	}
+	return
+}
+
+func (sc *sChat) SaveMsg(ctx context.Context, userId uint, msg string) (err error) {
+	return
 }

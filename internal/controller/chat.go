@@ -233,3 +233,14 @@ func (cc *cChat) IndexChat(ctx context.Context, req *v1.ChatIndexReq) (res *v1.C
 		return
 	}
 }
+
+func (cc *cChat) ListMsg(ctx context.Context, req *v1.ListMsgReq) (res *v1.ListMsgRes, err error) {
+	msgs, err := service.Chat().GetAllMsgs(ctx, service.Session().GetUser(ctx).Id, req.Id)
+	response.Json(g.RequestFromCtx(ctx), 0, "", msgs)
+	return
+}
+
+func (cc *cChat) Chat(ctx context.Context, req *v1.ChatReq) (res *v1.ChatRes, err error) {
+	err = service.Chat().SaveMsg(ctx, req.Id, req.Msg)
+	return
+}

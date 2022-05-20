@@ -1,8 +1,8 @@
 <div align="center">
-    正在和<a href="/user/{{.Data.Friend.Id}}"> {{.Data.Friend.Nickname}} </a>聊天
+    正在和<a name="href" id="{{.Data.Friend.Id}}" href="/user/{{.Data.Friend.Id}}"> {{.Data.Friend.Nickname}} </a>聊天
     <hr/>
     <div id="history">
-    
+        
     </div>
     <hr/>
     <input type="text" name="" id="message" />
@@ -11,5 +11,22 @@
 
 
 <script type="text/javascript">
+    var id = $("[name='href']").attr("id")
+    $.get(
+        "/chat/msgs",
+        {"id": id},
+        function(r) {
+            if (r.code <= 0) {
+                for (let i = 0; i < r.data.length; i++) {
+                    $("#history").append(r.data[i].Sender + "说：" + r.data[i].Content + "<br>")
+                }
+            }
+        }
+    )
+    $("#sendMsgBtn").click(function() {
+       
+        alert(id)
+
+    })
 
 </script>

@@ -75,3 +75,22 @@ type AgreeReq struct {
 type AgreeRes struct {
 	
 }
+
+type ChatReq struct {
+	g.Meta `path:"/chat" method:"post" tags:"通讯" summary:"聊天"`
+	Id uint `json:"id"`
+	Msg string `json:"msg"`
+}
+
+type ChatRes struct {
+
+}
+
+type ListMsgReq struct {
+	g.Meta `path:"/chat/msgs" method:"get" tags:"通讯" summary:"聊天"`
+	Id uint `json:"id"`
+}
+
+type ListMsgRes struct {
+
+}

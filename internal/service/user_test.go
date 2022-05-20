@@ -21,3 +21,10 @@ func Test_GetUser(t *testing.T) {
 		}
 	})
 }
+
+func Test_GetNicknameById(t *testing.T) {
+	gtest.C(t, func(t *gtest.T) {
+		nickname := service.User().GetNicknameById(ctx, 1111)
+		t.Log(nickname)
+	})
+}

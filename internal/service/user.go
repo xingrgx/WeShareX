@@ -168,3 +168,9 @@ func (su *sUser) GetUserByNickname(ctx context.Context, nickname string) (users 
 	err = dao.User.Ctx(ctx).Where(dao.User.Columns().Nickname, nickname).Scan(&users)
 	return
 }
+
+func (su *sUser) GetNicknameById(ctx context.Context, id uint) (nickname string) {
+	val, _ := dao.User.Ctx(ctx).Where(dao.User.Columns().Id, id).Fields(dao.User.Columns().Nickname).Value()
+	nickname = val.String()
+	return
+}
