@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"os"
 	"strconv"
 
 	"github.com/gogf/gf/v2/frame/g"
@@ -90,6 +91,9 @@ func (cs *cShare) ShareGet(ctx context.Context, req *v1.ShareGetReq) (res *v1.Sh
 }
 
 func (cs *cShare) ShareDownload(ctx context.Context, req *v1.ShareDownloadReq) (res *v1.ShareDownloadRes, err error) {
-	//path, err := service.Share().Download(ctx, req.Id, req.Code)
+	paths, err := service.Share().Download(ctx, req.Id, req.Code)
+	service.Directory().Zip(paths, "files/tmp.zip")
+	g.RequestFromCtx(ctx).Response.ServeFileDownload("files/tmp.zip")
+	defer os.Remove("files/tmp.zip")
 	return
 }
