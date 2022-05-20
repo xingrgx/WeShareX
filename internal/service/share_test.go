@@ -38,3 +38,7 @@ func Test_GetAllShares(t *testing.T) {
 	shares, _ := Share().GetAllShares(ctx, 1)
 	t.Log(shares)
 }
+
+func Test_Download(t *testing.T) {
+	Share().Download(ctx, "18yz38e4xw0cjoc9p2xbxsw100g3yl7d", "eMWk")
+}

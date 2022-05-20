@@ -90,6 +90,19 @@ func (ss *sShare) GetShareByIdAndCode(ctx context.Context, id, code string) (sha
 	return
 }
 
-// func (ss *sShare) Download(ctx context.Context, id, code string) (path string, err error) {
-	
-// }
+func (ss *sShare) Download(ctx context.Context, id, code string) (paths []string, err error) {
+	var (
+		ids []string
+	)
+	vals, err := dao.Relation.Ctx(ctx).Where(dao.Relation.Columns().ShareId, id).Fields(dao.Relation.Columns().FileId).Array()
+	val, _ :=dao.Share.Ctx(ctx).Where(dao.Share.Columns().Id, id).Fields(dao.Share.Columns().UserId).Value()
+	userId := val.String()
+	for _, v := range vals {
+		ids = append(ids, v.String())
+	}
+	for _, v := range ids {
+		path, _ := File().GetFilePathByFileIdAndUserId(ctx, v, gconv.Uint(userId))
+		paths = append(paths, "files/"+userId+"/root"+path)
+	}
+	return
+}
