@@ -1,0 +1,95 @@
+users
+
+<table border="1" align="center">
+    <tr>
+        <th>用户ID</th>
+        <th>用户账户名</th>
+        <th>用户昵称</th>
+        <th>性别</th>
+        <th>操作</th>
+    </tr>
+    {{range $key, $user := .Data.Users}}
+    <tr>
+        <td>{{$user.Id}}</td>
+        <td><a href="/user/{{$user.Id}}">{{$user.Passport}}</a></td>
+        <td>{{$user.Nickname}}</td>
+        <td>{{if eq $user.Gender "0"}}未知{{else if eq $user.Gender "1"}}男{{else}}女{{end}}</td>
+        <td>
+           {{if eq $user.Status "0"}}
+           <button name="enableBtn" id="enableBtn-{{$user.Id}}">启用</button>
+           {{else if eq $user.Status "1"}}
+           <button name="disableBtn" id="disableBtn-{{$user.Id}}">禁用</button>
+           {{end}}
+           <button>禁言/取消禁言</button>
+           <button>修改信息</button>
+        </td>
+    </tr>
+    {{end}}
+</table>
+
+<script type="text/javascript">
+    $(function() {
+        $("[name='enableBtn']").click(function() {
+            var btnId = $(this).attr("id")
+            userId = btnId.substring(10)
+            $.post(
+                "/admin/enable",
+                {"userId": userId,},
+                function(r, textStatus) {
+                    if (r.code <= 0) {
+                        swal({
+                            title:   "成功启用该用户",
+                            text:    "",
+                            icon:    "success",
+                            timer:   2000,
+                            buttons: false
+                        }).then((value) => {
+                            if (r.redirect != "") {
+                                window.location.href = r.redirect;
+                            } else {
+                                window.location.href = "";
+                            }
+                        });
+                    } else {
+                        swal({
+                            text:   r.message,
+                            icon:   "warning",
+                            button: "确定",
+                        });
+                    }
+                }
+            )
+        })
+        $("[name='disableBtn']").click(function() {
+            var btnId = $(this).attr("id")
+            userId = btnId.substring(11)
+            $.post(
+                "/admin/disable",
+                {"userId": userId,},
+                function(r, textStatus) {
+                    if (r.code <= 0) {
+                        swal({
+                            title:   "成功禁用该用户",
+                            text:    "",
+                            icon:    "success",
+                            timer:   2000,
+                            buttons: false
+                        }).then((value) => {
+                            if (r.redirect != "") {
+                                window.location.href = r.redirect;
+                            } else {
+                                window.location.href = "";
+                            }
+                        });
+                    } else {
+                        swal({
+                            text:   r.message,
+                            icon:   "warning",
+                            button: "确定",
+                        });
+                    }
+                }
+            )
+        })
+    })    
+</script>

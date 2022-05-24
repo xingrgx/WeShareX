@@ -174,3 +174,9 @@ func (su *sUser) GetNicknameById(ctx context.Context, id uint) (nickname string)
 	nickname = val.String()
 	return
 }
+
+func (su *sUser) GetAllCommonUsers(ctx context.Context) (users []*model.UserProfileOutput, err error) {
+	err = dao.User.Ctx(ctx).Where(dao.User.Columns().Status, 0).
+	WhereOr(dao.User.Columns().Status, 1).Scan(&users)
+	return
+}

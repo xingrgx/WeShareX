@@ -1,0 +1,10 @@
+{{if eq .Error "success"}}
+<div align="center">
+<h3>您可以进行以下操作：</h3>
+<a href="/admin/users">管理所有普通用户</a><br>
+<a href="/admin/files">管理所有文件</a><br>
+<a href="/admin/shares">管理所有共享记录</a><br>
+</div>
+{{else}}
+您没有权限！
+{{end}}

@@ -32,6 +32,7 @@ var (
 					controller.Directory,
 					controller.Share,
 					controller.Chat,
+					controller.Admin,
 				)
 			})
 			s.Run()
