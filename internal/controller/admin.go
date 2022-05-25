@@ -16,19 +16,6 @@ var Admin cAdmin
 
 func (ca *cAdmin) AdminIndex(ctx context.Context, req *v1.IndexAdminReq) (res *v1.IndexAdminRes, err error) {
 	s := service.Session().GetUser(ctx).Status
-	if s == 2 {
-		service.View().Render(ctx, model.View{
-			Title: "管理员",
-			Error: "success",
-		})
-		return
-	}
-	service.View().RenderTpl(ctx, "index/admin/error.html", model.View{})
-	return
-}
-
-func (ca *cAdmin) AdminIndexUsers(ctx context.Context, req *v1.AdminIndexUsersReq) (res *v1.AdminIndexUsersRes, err error) {
-	s := service.Session().GetUser(ctx).Status
 	users, _ := service.User().GetAllCommonUsers(ctx)
 	if s == 2 {
 		service.View().Render(ctx, model.View{
@@ -43,6 +30,8 @@ func (ca *cAdmin) AdminIndexUsers(ctx context.Context, req *v1.AdminIndexUsersRe
 	service.View().RenderTpl(ctx, "index/admin/error.html", model.View{})
 	return
 }
+
+
 
 func (ca *cAdmin) AdminEnable(ctx context.Context, req *v1.EnableReq) (res *v1.EnableRes, err error) {
 	err = service.Admin().Enable(ctx, req.UserId)
@@ -70,3 +59,29 @@ func (ca *cAdmin) AdminUpdate(ctx context.Context, req *v1.UpdateReq) (res *v1.U
 	return
 }
 
+func (ca *cAdmin) AdminFile(ctx context.Context, req *v1.FileReq) (res *v1.FileRes, err error) {
+	filesMap, err := service.File().GetDirFiles(ctx, req.UserId, req.ParentId, req.Dir, req.Page, req.Size)
+	totalSize, _ := service.File().CountDirFiles(ctx, req.UserId, req.ParentId)
+	page := g.RequestFromCtx(ctx).GetPage(totalSize, req.Size)
+	breadCrumbs := service.View().GetBreadCrumbView(ctx, req.ParentId)
+	currentPathId := breadCrumbs[len(breadCrumbs)-1].CurrentPathId
+	service.View().Render(ctx, model.View{
+		Title: "管理文件",
+		Data: g.Map{
+			"page":          pageContent(page),
+			"filesMap":      filesMap,
+			"currentPathId": currentPathId,
+		},
+		BreadCrumbs: breadCrumbs,
+	})
+	return
+}
+
+func (ca *cAdmin) AdminFileDelete(ctx context.Context, req *v1.AdminFileDeleteReq) (res *v1.AdminFileDeleteRes, err error) {
+	if isFile := service.File().IsFile(ctx, req.FileId); isFile {
+		err = service.File().DeleteFileByFileIdAndUserId(ctx, req.FileId, req.UserId)
+	} else {
+		err = service.Directory().DeleteDirByDirIdAndUserId(ctx, req.FileId, req.UserId)
+	}
+	return
+}
