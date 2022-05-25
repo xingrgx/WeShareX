@@ -20,8 +20,11 @@ users
            {{else if eq $user.Status "1"}}
            <button name="disableBtn" id="disableBtn-{{$user.Id}}">禁用</button>
            {{end}}
-           <button>禁言/取消禁言</button>
-           <button>修改信息</button>
+           <!-- <button>禁言/取消禁言</button> -->
+           <form action="/admin/profile"  method="post">
+               <input type="text" name="userId" hidden value="{{$user.Id}}">
+               <input type="submit" value="修改信息">
+           </form>
         </td>
     </tr>
     {{end}}

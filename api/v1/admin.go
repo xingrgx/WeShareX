@@ -1,6 +1,9 @@
 package v1
 
-import "github.com/gogf/gf/v2/frame/g"
+import (
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/xingrgx/WeShareX/internal/model/entity"
+)
 
 type IndexAdminReq struct {
 	g.Meta `path:"/admin" method:"get"`
@@ -35,3 +38,22 @@ type DisableReq struct {
 type DisableRes struct {
 
 }
+
+type ProfileReq struct {
+	g.Meta `path:"/admin/profile" method:"post"`
+	UserId uint `json:"userId"`
+}
+
+type ProfileRes struct {
+	g.Meta `mime:"text/html" type:"string" example:"<html/>"`
+}
+
+type UpdateReq struct {
+	g.Meta `path:"/admin/update" method:"post"`
+	Input entity.User `json:"input"`
+}
+
+type UpdateRes struct {
+	g.Meta `mime:"text/html" type:"string" example:"<html/>"`
+}
+

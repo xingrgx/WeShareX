@@ -1,0 +1,60 @@
+<div id="updateDiv" align="center">
+    用户&nbsp&nbsp&nbspID：<input readonly type="text" name="" id="id" value="{{.Data.User.Id}}"><br>
+    账&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp户：<input readonly type="text" name="" id="passport" value="{{.Data.User.Passport}}"><br>
+    密&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp码：<input type="text" name="" id="password"><br>
+    昵&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp称：<input type="text" name="" id="nickname" value="{{.Data.User.Nickname}}"><br>
+    邮&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp箱：<input type="text" name="" id="email" value="{{.Data.User.Email}}"><br>
+    头像地址：<input type="text" name="" id="avatar" value="{{.Data.User.Avatar}}"><br>
+    状&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp态：<input type="text" name="" id="status" value="{{.Data.User.Status}}"><br>
+    性&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp别：<input type="text" name="" id="gender" value="{{.Data.User.Gender}}"><br>
+    <br>
+    <button id="updateBtn">提交修改</button>
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $("#updateBtn").click(function(){
+            var input = {
+                id:       $("#id").val(),
+                passport: $("#passport").val(),
+                password: $("#password").val(),
+                nickname: $("#nickname").val(),
+                email:    $("#email").val(),
+                avatar:   $("#avatar").val(),
+                status:   $("#status").val(),
+                gender:   $("#gender").val(),
+            }
+            $.post(
+                "/admin/update",
+                {
+                    "input": input
+                },
+                function(r, textStatus) {
+                    if (r.code <= 0) {
+                        swal({
+                            title:   "成功更新用户信息",
+                            text:    "",
+                            icon:    "success",
+                            timer:   2000,
+                            buttons: false
+                        }).then((value) => {
+                            if (r.redirect != "") {
+                                window.location.href = r.redirect;
+                            } else {
+                                window.location.href = "/admin/users";
+                            }
+                        });
+                    } else {
+                        swal({
+                            text:   r.message,
+                            icon:   "warning",
+                            button: "确定",
+                        });
+                    }
+                }
+            )
+        })
+    })
+</script>
+
+

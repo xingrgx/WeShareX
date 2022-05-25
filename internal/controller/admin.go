@@ -53,3 +53,20 @@ func (ca *cAdmin) AdminDisable(ctx context.Context, req *v1.DisableReq) (res *v1
 	err = service.Admin().Disable(ctx, req.UserId)
 	return
 }
+
+func (ca *cAdmin) AdminProfile(ctx context.Context, req *v1.ProfileReq) (res *v1.ProfileRes, err error) {
+	profile, err := service.Admin().GetCommonUserById(ctx, req.UserId)
+	service.View().Render(ctx, model.View{
+		Title: "修改信息",
+		Data: g.Map{
+			"User": profile,
+		},
+	})
+	return
+}
+
+func (ca *cAdmin) AdminUpdate(ctx context.Context, req *v1.UpdateReq) (res *v1.UpdateRes, err error) {
+	err = service.Admin().UpdateProfile(ctx, req.Input)
+	return
+}
+
