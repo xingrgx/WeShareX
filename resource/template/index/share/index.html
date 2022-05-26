@@ -21,7 +21,7 @@
         <th>{{$share.createAt}}</th>
         <th>{{$share.expireAt}}</th>
         <th>
-            取消分享 
+            <button name="cancelBtn" id="cancelBtn-{{$share.id}}">取消分享</button>
             | 
             <button name="getLinkBtn" id="getLinkBtn-{{$share.id}}">获取链接</button>
         </th>
@@ -36,6 +36,38 @@
         alert("复制成功")
     }
     $(function() {
+        $("[name='cancelBtn']").click(function() {
+            var id = event.currentTarget.id.substring(10)
+            $.get(
+                "/share/cancel",
+                {"id":id},
+                function(r, textStatus) {
+                    if (r.code <= 0) {
+                        swal({
+                            title:   "取消分享成功",
+                            text:    "您可以继续操作!",
+                            icon:    "success",
+                            timer:   2000,
+                            buttons: false
+                        }).then((value) => {
+                            if (r.redirect != "") {
+                                window.location.href = r.redirect;
+                            } else {
+                                window.location.href = "";
+                            }
+                        });
+                    } else {
+                        swal({
+                            text:   r.message,
+                            icon:   "warning",
+                            button: "确定",
+                        }).then(function() {
+                            window.location.href = "";
+                        });
+                    }
+                }
+            )
+        })
         $("[name='getLinkBtn']").click(function() {
             var id = event.currentTarget.id.substring(11)
             $.get(

@@ -106,3 +106,13 @@ func (ss *sShare) Download(ctx context.Context, id, code string) (paths []string
 	}
 	return
 }
+
+func (ss *sShare) DeleteShare(ctx context.Context, uid uint, sid string) (err error) {
+	return dao.Share.Transaction(ctx, func(ctx context.Context, tx *gdb.TX) error {
+		_, err = dao.Share.Ctx(ctx).Where(g.Map {
+			dao.Share.Columns().Id: sid,
+			dao.Share.Columns().UserId: uid,
+		}).Delete()
+		return err
+	})
+}

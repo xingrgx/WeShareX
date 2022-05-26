@@ -97,3 +97,8 @@ func (cs *cShare) ShareDownload(ctx context.Context, req *v1.ShareDownloadReq) (
 	defer os.Remove("files/tmp.zip")
 	return
 }
+
+func (cs *cShare) ShareCancel(ctx context.Context, req *v1.ShareCancelReq) (res *v1.ShareCancelRes, err error) {
+	err = service.Share().DeleteShare(ctx, service.Session().GetUser(ctx).Id, req.Id)
+	return
+}

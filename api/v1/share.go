@@ -60,3 +60,12 @@ type ShareDownloadReq struct {
 
 type ShareDownloadRes struct {
 }
+
+type ShareCancelReq struct {
+	g.Meta `path:"/share/cancel" method:"get" summary:"取消分享文件" tags:"分享"`
+	Id     string `json:"id"`
+}
+
+type ShareCancelRes struct {
+	
+}

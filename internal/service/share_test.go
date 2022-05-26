@@ -42,3 +42,10 @@ func Test_GetAllShares(t *testing.T) {
 func Test_Download(t *testing.T) {
 	Share().Download(ctx, "18yz38e4xw0cjoc9p2xbxsw100g3yl7d", "eMWk")
 }
+
+func Test_DeleteShare(t *testing.T) {
+	gtest.C(t, func(t *gtest.T) {
+		err := Share().DeleteShare(ctx, 1, "wziv208go0ck4n76lyniw0300b20q8w")
+		t.AssertNil(err)
+	})
+}
