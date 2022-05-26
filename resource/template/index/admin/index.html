@@ -14,30 +14,31 @@
         <td>{{$user.Nickname}}</td>
         <td>{{if eq $user.Gender "0"}}未知{{else if eq $user.Gender "1"}}男{{else}}女{{end}}</td>
         <td>
-           {{if eq $user.Status "0"}}
-           <button name="enableBtn" id="enableBtn-{{$user.Id}}">启用</button>
-           {{else if eq $user.Status "1"}}
-           <button name="disableBtn" id="disableBtn-{{$user.Id}}">禁用</button>
-           {{end}}
-           <!-- <button>禁言/取消禁言</button> -->
-           <form action="/admin/profile"  method="post">
-               <input type="text" name="userId" hidden value="{{$user.Id}}">
-               <input type="submit" value="修改信息">
-           </form>
-           <form action="/admin/file"  method="get">
-            <input type="text" name="userId" hidden value="{{$user.Id}}">
-            <input type="submit" value="管理文件">
-        </form>
+            <div style="display: flex;">
+                {{if eq $user.Status "0"}}
+                <button name="enableBtn" id="enableBtn-{{$user.Id}}">启用</button>
+                {{else if eq $user.Status "1"}}
+                <button name="disableBtn" id="disableBtn-{{$user.Id}}">禁用</button>
+                {{end}}
+                <!-- <button>禁言/取消禁言</button> -->
+            
+                <form action="/admin/profile"  method="post" >
+                    <input type="text" name="userId" hidden value="{{$user.Id}}">
+                    <input type="submit" value="修改信息">
+                </form>
+                <form action="/admin/file"  method="get">
+                    <input type="text" name="userId" hidden value="{{$user.Id}}">
+                    <input type="submit" value="管理文件">
+                </form>
+                <form action="/admin/share"  method="get">
+                    <input type="text" name="userId" hidden value="{{$user.Id}}">
+                    <input type="submit" value="管理共享">
+                </form>
+            </div>
         </td>
     </tr>
     {{end}}
 </table>
-<div align="center">
-<h3>您可以进行以下操作：</h3>
-<a href="/admin/users">管理所有普通用户</a><br>
-<a href="/admin/files">管理所有文件</a><br>
-<a href="/admin/shares">管理所有共享记录</a><br>
-</div>
 {{else}}
 您没有权限！
 {{end}}

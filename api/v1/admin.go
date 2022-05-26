@@ -70,3 +70,12 @@ type AdminFileDeleteReq struct {
 type AdminFileDeleteRes struct {
 
 }
+
+type AdminShareReq struct {
+	g.Meta `path:"/admin/share" method:"get"`
+	UserId uint `json:"userId"`
+}
+
+type AdminShareRes struct {
+
+}

@@ -65,6 +65,8 @@ func (ca *cAdmin) AdminFile(ctx context.Context, req *v1.FileReq) (res *v1.FileR
 	page := g.RequestFromCtx(ctx).GetPage(totalSize, req.Size)
 	breadCrumbs := service.View().GetBreadCrumbView(ctx, req.ParentId)
 	currentPathId := breadCrumbs[len(breadCrumbs)-1].CurrentPathId
+	g.Dump(filesMap)
+	g.Dump(currentPathId)
 	service.View().Render(ctx, model.View{
 		Title: "管理文件",
 		Data: g.Map{
@@ -83,5 +85,16 @@ func (ca *cAdmin) AdminFileDelete(ctx context.Context, req *v1.AdminFileDeleteRe
 	} else {
 		err = service.Directory().DeleteDirByDirIdAndUserId(ctx, req.FileId, req.UserId)
 	}
+	return
+}
+
+func (ca *cAdmin) AdminShare(ctx context.Context, req *v1.AdminShareReq) (res *v1.AdminShareRes, err error) {
+	sharesMap, err := service.Share().GetAllShares(ctx, req.UserId)
+	service.View().Render(ctx, model.View{
+		Title: "我的分享",
+		Data: g.Map{
+			"sharesMap": sharesMap,
+		},
+	})
 	return
 }
