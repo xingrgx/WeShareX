@@ -1,0 +1,23 @@
+<table border="1">
+    <tr>
+        <th>名称</th>
+        <th>分享者</th>
+        <th>创建时间</th>
+        <th>失效时间</th>
+        <th>操作</th>
+    </tr>
+    
+    {{range $key, $share := .Data.sharesMap}}
+    <tr>
+        <th>{{$share.name}}</th>
+        <th>{{$share.nickname}}</th>
+        <th>{{$share.createAt}}</th>
+        <th>{{$share.expireAt}}</th>
+        <th>
+            取消分享 
+            | 
+            <button name="getLinkBtn" id="getLinkBtn-{{$share.id}}">获取链接</button>
+        </th>
+    </tr>
+    {{end}}
+</table>

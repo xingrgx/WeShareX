@@ -1,0 +1,92 @@
+files
+<div style="background-color:#5daaddcc;">
+    当前位置
+    {{range $key, $crumb := .BreadCrumbs}}
+       >> {{$crumb.Name}}
+    {{end}}
+    <input type="hidden" value="{{.Data.currentPathId}}" id="currentPathId"></input>
+</div>
+<table border="1">
+    <tr>
+        <th><input id="selectAll" type="checkbox"/>全选/全不选</th>
+        <th>文件名</th>
+        <th>大小</th>
+        <th>修改日期</th>
+        <th>操作</th>
+    </tr>
+    <tr id="newDirPlace">
+        
+    </tr>
+{{range $key, $file := .Data.filesMap}}
+    <tr>
+        <td><input type="checkbox" name="checkbox" id="checkbox-{{$file.id}}"></td>
+        <td>
+            <input hidden name="fileName" id="fileName-{{$file.id}}" type="text" value="{{$file.name}}" class="myinput">
+            {{if eq $file.dir 1}}
+            <a name="fileNameHref" id="fileNameHref-{{$file.id}}" href="file?dirId={{$file.id}}&userId={{$file.userId}}" onclick="refreshCurrentPathId('{{$file.id}}')">{{$file.name}}</a>
+            {{else}}
+            <a name="fileNameHref" id="fileNameHref-{{$file.id}}" href="file/preview?fileId={{$file.id}}">{{$file.name}}</a>
+            {{end}}
+            
+        </td>
+        <td>{{$file.size}}</td>
+        <td>{{$file.updateAt}}</td>
+        <td>
+            <!-- <button type="button" name="renameBtn" id="renameBtn-{{$file.id}}">重命名</button> |
+            {{if eq $file.dir 1}}
+            <a href="zip?fileIds={{$file.id}}"> 下载 </a>|
+            {{else}}
+            <a href="file/download?fileId={{$file.id}}"> 下载 </a>|
+            {{end}} -->
+            <button name="deleteBtn" id="deleteBtn-{{$file.id}}">删除</button>
+            <!-- <a href="file/detail?fileId={{$file.id}}">文件详情</a>  -->
+        </td>
+    </tr>
+    {{end}}
+</table>
+
+<script text="text/javascript">
+    function getURLString(arg) { 
+        var reg = new RegExp("(^|&)" + arg + "=([^&]*)(&|$)", "i"); 
+        var r = window.location.search.substr(1).match(reg); 
+        if (r != null) 
+            return unescape(r[2]);
+        return null; 
+    }
+     $(function(){
+        $("[name='deleteBtn']").click(function() {
+            var fileId = event.currentTarget.id.substring(10)
+            var userId = getURLString("userId")
+            $.post(
+                "/admin/file/delete",
+                {
+                    "fileId": fileId,
+                    "userId": userId,
+                },
+                function(r, textStatus) {
+                    if (r.code <= 0) {
+                        swal({
+                            title:   "文件删除成功",
+                            text:    "您可以继续操作!",
+                            icon:    "success",
+                            timer:   2000,
+                            buttons: false
+                        }).then((value) => {
+                            if (r.redirect != "") {
+                                window.location.href = r.redirect;
+                            } else {
+                                window.location.href = "";
+                            }
+                        });
+                    } else {
+                        swal({
+                            text:   r.message,
+                            icon:   "warning",
+                            button: "确定",
+                        });
+                    }
+                }
+            )
+        })
+     })
+</script>
