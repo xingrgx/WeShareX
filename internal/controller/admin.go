@@ -98,3 +98,8 @@ func (ca *cAdmin) AdminShare(ctx context.Context, req *v1.AdminShareReq) (res *v
 	})
 	return
 }
+
+func (ca *cAdmin) AdminCancel(ctx context.Context, req *v1.AdminCancelReq) (res *v1.AdminCancelRes, err error) {
+	err = service.Share().DeleteShare(ctx, req.UserId, req.Id)
+	return
+}

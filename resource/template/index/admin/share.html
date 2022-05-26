@@ -1,3 +1,11 @@
+<div>
+    <textarea id="copyArea" style="width: 650px;height: 50px">
+    WeShareX......
+    </textarea>
+    <br>
+    <button type="button" onclick="copy()">复制链接</button>
+</div>
+
 <table border="1">
     <tr>
         <th>名称</th>
@@ -14,10 +22,66 @@
         <th>{{$share.createAt}}</th>
         <th>{{$share.expireAt}}</th>
         <th>
-            取消分享 
+            <button name="cancelBtn" id="cancelBtn-{{$share.id}}-{{$share.userId}}">取消分享 </button> 
             | 
             <button name="getLinkBtn" id="getLinkBtn-{{$share.id}}">获取链接</button>
         </th>
     </tr>
     {{end}}
 </table>
+
+<script text="type/javascript">
+    function copy() {
+        $("#copyArea").select()
+        document.execCommand("Copy")
+        alert("复制成功")
+    }
+    $(function() {
+        $("[name='cancelBtn']").click(function() {
+            var id = event.currentTarget.id.substring(10, 42)
+            var userId = event.currentTarget.id.substring(43)
+            $.get(
+                "/admin/cancel",
+                {
+                    "id":id,
+                    "userId":userId
+                },
+                function(r, textStatus) {
+                    if (r.code <= 0) {
+                        swal({
+                            title:   "取消分享成功",
+                            text:    "您可以继续操作!",
+                            icon:    "success",
+                            timer:   2000,
+                            buttons: false
+                        }).then((value) => {
+                            if (r.redirect != "") {
+                                window.location.href = r.redirect;
+                            } else {
+                                window.location.href = "";
+                            }
+                        });
+                    } else {
+                        swal({
+                            text:   r.message,
+                            icon:   "warning",
+                            button: "确定",
+                        }).then(function() {
+                            window.location.href = "";
+                        });
+                    }
+                }
+            )
+        })
+        $("[name='getLinkBtn']").click(function() {
+            var id = event.currentTarget.id.substring(11)
+            $.get(
+                "/share/link?id="+id,
+                function(r, textStatus) {
+                    var link = "链接：http://localhost:8585/" + r.data.Url + " 提取码：" + r.data.Code
+                    $("#copyArea").val(link)
+                }
+            )
+        })
+    })
+</script>

@@ -79,3 +79,13 @@ type AdminShareReq struct {
 type AdminShareRes struct {
 
 }
+
+type AdminCancelReq struct {
+	g.Meta `path:"/admin/cancel" method:"get"`
+	Id string `json:"id"`
+	UserId uint `json:"userId"`
+}
+
+type AdminCancelRes struct {
+	
+}
