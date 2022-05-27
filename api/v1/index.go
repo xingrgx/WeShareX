@@ -11,3 +11,9 @@ type IndexReq struct {
 type IndexRes struct {
 	g.Meta `mime:"text/html" type:"string" example:"<html/>"`
 }
+
+type TestReq struct{
+	g.Meta `path:"/test" method:"get"`
+}
+
+type TestRes struct{}

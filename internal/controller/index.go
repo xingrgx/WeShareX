@@ -13,10 +13,16 @@ type cIndex struct{}
 var Index = cIndex{}
 
 // Index 控制展示首页
-func (i *cIndex) Index(ctx context.Context, req *v1.IndexReq) (res v1.IndexRes, err error) {
 func (i *cIndex) Index(ctx context.Context, req *v1.IndexReq) (res *v1.IndexRes, err error) {
 	service.View().Render(ctx, model.View{
 		Title: "首页",
+	})
+	return
+}
+
+func (i *cIndex) Test(ctx context.Context, req *v1.TestReq) (res *v1.TestRes, err error) {
+	service.View().Render(ctx, model.View{
+		Title: "测试页面",
 	})
 	return
 }
