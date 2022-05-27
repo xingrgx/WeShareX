@@ -1,53 +1,85 @@
-<div id="updateDiv" align="center">
-    用户&nbsp&nbsp&nbspID：<input readonly type="text" name="" id="id" value="{{.Data.User.Id}}"><br>
-    账&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp户：<input readonly type="text" name="" id="passport" value="{{.Data.User.Passport}}"><br>
-    密&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp码：<input type="text" name="" id="password"><br>
-    昵&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp称：<input type="text" name="" id="nickname" value="{{.Data.User.Nickname}}"><br>
-    邮&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp箱：<input type="text" name="" id="email" value="{{.Data.User.Email}}"><br>
-    头像地址：<input type="text" name="" id="avatar" value="{{.Data.User.Avatar}}"><br>
-    状&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp态：<input type="text" name="" id="status" value="{{.Data.User.Status}}"><br>
-    性&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp别：<input type="text" name="" id="gender" value="{{.Data.User.Gender}}"><br>
-    <br>
-    <button id="updateBtn">提交修改</button>
+<div class="container">
+    <div class="row">
+        <div class="col-4"></div>
+        <div align="center" class="col-4">
+            <h1 class="h3 mb-3 fw-normal">请修改</h1>
+            <div class="form-floating">
+                <input type="text" name="id" class="form-control" id="id" value="{{.Data.User.Id}}" readonly>
+                <label for="floatingInput">用户ID</label>
+            </div>
+            <div class="form-floating">
+                <input type="text" name="passport" class="form-control" id="passport" value="{{.Data.User.Passport}}" readonly>
+                <label for="floatingInput">账户名</label>
+            </div>
+            <div class="form-floating">
+                <input type="text" name="nickname" class="form-control" id="nickname" placeholder="请输入昵称" value="{{.Data.User.Nickname}}">
+                <label for="floatingInput">昵称</label>
+            </div>
+            <div class="form-floating">
+                <input type="text" name="password" class="form-control" id="password" placeholder="请输入密码" value="{{.Data.User.Password}}">
+                <label for="floatingPassword">密码</label>
+            </div>
+            <div class="form-floating">
+                <input type="text" name="email" class="form-control" id="email" placeholder="请输入邮箱" value="{{.Data.User.Email}}">
+                <label for="floatingInput">邮箱</label>
+            </div>
+            <div class="form-floating">
+                <input type="text" name="avatar" class="form-control" id="avatar" placeholder="请输入头像地址" value="{{.Data.User.Avatar}}">
+                <label for="floatingInput">头像地址</label>
+            </div>
+            <div class="form-floating">
+                <input type="text" name="status" class="form-control" id="status" placeholder="请设置用户状态" value="{{.Data.User.Status}}">
+                <label for="floatingInput">用户状态 禁用:0 普通:1 管理员:2</label>
+            </div>
+            <div class="form-floating">
+                <input type="text" name="gender" class="form-control" id="gender" placeholder="设置用户性别" value="{{.Data.User.Gender}}">
+                <label for="floatingInput">性别 未知:0 男:1 女:2</label>
+            </div>
+            <br>
+            <button class=" btn btn-lg btn-primary" id="updateBtn">提交修改</button>
+        </div>
+        <div class="col-4"></div>
+    </div>
 </div>
 
 <script type="text/javascript">
-    $(function(){
-        $("#updateBtn").click(function(){
+    $(function () {
+        $("#updateBtn").click(function () {
             var input = {
-                id:       $("#id").val(),
+                id: $("#id").val(),
                 passport: $("#passport").val(),
                 password: $("#password").val(),
                 nickname: $("#nickname").val(),
-                email:    $("#email").val(),
-                avatar:   $("#avatar").val(),
-                status:   $("#status").val(),
-                gender:   $("#gender").val(),
+                email: $("#email").val(),
+                avatar: $("#avatar").val(),
+                status: $("#status").val(),
+                gender: $("#gender").val(),
             }
+
             $.post(
                 "/admin/update",
                 {
                     "input": input
                 },
-                function(r, textStatus) {
+                function (r, textStatus) {
                     if (r.code <= 0) {
                         swal({
-                            title:   "成功更新用户信息",
-                            text:    "",
-                            icon:    "success",
-                            timer:   2000,
+                            title: "成功更新用户信息",
+                            text: "",
+                            icon: "success",
+                            timer: 2000,
                             buttons: false
                         }).then((value) => {
                             if (r.redirect != "") {
                                 window.location.href = r.redirect;
                             } else {
-                                window.location.href = "/admin/users";
+                                window.location.href = "/admin/";
                             }
                         });
                     } else {
                         swal({
-                            text:   r.message,
-                            icon:   "warning",
+                            text: r.message,
+                            icon: "warning",
                             button: "确定",
                         });
                     }
@@ -56,5 +88,3 @@
         })
     })
 </script>
-
-
