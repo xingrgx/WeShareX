@@ -1,54 +1,65 @@
 <div align="center">
     正在和<a name="href" id="{{.Data.Friend.Id}}" href="/user/{{.Data.Friend.Id}}"> {{.Data.Friend.Nickname}} </a>聊天
-    <hr/>
-    <div id="history">
-        
+    
+
+   
+    <div class="container">
+        <div class="row">
+            <div class="col-4"></div>
+            <hr />
+            <div id="history"></div>
+            <hr />
+        </div>
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="d-flex col-4">
+                <input class="form-control me-2" type="text" name="" id="message" />
+            </div>
+        </div>
+        <br>
+        <button class="btn btn-primary" id="sendMsgBtn">发送消息</button>
     </div>
-    <hr/>
-    <input type="text" name="" id="message" />
-    <button id="sendMsgBtn">发送消息</button>
-</div>
 
 
-<script type="text/javascript">
-    var id = $("[name='href']").attr("id")
-    $.get(
-        "/chat/msgs",
-        {"id": id},
-        function(r) {
-            if (r.code <= 0) {
-                for (let i = 0; i < r.data.length; i++) {
-                    if (r.data[i].SenderId == id) {
-                        $("#history").append("<p align='left'>"+r.data[i].Time + ":" + r.data[i].Sender + "说：" + r.data[i].Content + "</p>")
-                    } else {
-                        $("#history").append("<p align='right'>"+r.data[i].Time + ":" + r.data[i].Sender + "说：" + r.data[i].Content + "</p>")
+    <script type="text/javascript">
+        var id = $("[name='href']").attr("id")
+        $.get(
+            "/chat/msgs",
+            { "id": id },
+            function (r) {
+                if (r.code <= 0) {
+                    for (let i = 0; i < r.data.length; i++) {
+                        if (r.data[i].SenderId == id) {
+                            $("#history").append("<p align='left'>" + r.data[i].Time + ":" + r.data[i].Sender + "说：" + r.data[i].Content + "</p>")
+                        } else {
+                            $("#history").append("<p align='right'>" + r.data[i].Time + ":" + r.data[i].Sender + "说：" + r.data[i].Content + "</p>")
+                        }
+
                     }
-                    
-                }
-            }
-        }
-    )
-    $("#sendMsgBtn").click(function() {
-        var msg = $("#message").val()
-        if (msg=="") {
-            alert("消息不能为空")
-            return
-        }
-        $.post(
-            "/chat",
-            {
-                "id": id,
-                "msg": msg
-            },
-            function(r) {
-                if (r.code > 0) {
-                    alert("发送失败")
-                } else {
-                    location.reload()
                 }
             }
         )
+        $("#sendMsgBtn").click(function () {
+            var msg = $("#message").val()
+            if (msg == "") {
+                alert("消息不能为空")
+                return
+            }
+            $.post(
+                "/chat",
+                {
+                    "id": id,
+                    "msg": msg
+                },
+                function (r) {
+                    if (r.code > 0) {
+                        alert("发送失败")
+                    } else {
+                        location.reload()
+                    }
+                }
+            )
 
-    })
+        })
 
-</script>
+    </script>

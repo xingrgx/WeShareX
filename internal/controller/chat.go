@@ -184,6 +184,7 @@ func (cc *cChat) writeGroupWithTypeList() error {
 
 func (cc *cChat) ListFriends(ctx context.Context, req *v1.ListFriendsReq) (res *v1.ListFriendsRes, err error) {
 	friends, err := service.Chat().GetAllFriends(service.Session().GetUser(ctx).Id)
+	g.Dump(friends)
 	service.View().Render(ctx, model.View{
 		Title: "通讯录",
 		Data: g.Map {

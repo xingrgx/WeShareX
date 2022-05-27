@@ -1,42 +1,62 @@
 <h3 align="center">查找好友</h3>
 
-<div align="center">
+<div class="container">
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="d-flex col-4" role="search">
+            <input class="form-control me-2" id="searchMsg" type="search" placeholder="请输入好友账号" aria-label="Search">
+            <button class="btn btn-outline-success" id="searchFriendBtn">搜索</button>
+        </div>
+        <div class="col-4"></div>
+    </div>
+</div>
+
+<!-- <div align="center">
     <input id="searchMsg" type="text" placeholder="请输入好友账号" />
     <button id="searchFriendBtn">搜索</button>
-</div>
+</div> -->
 
 <div id="searchFriendsRes" align="center">
 </div>
 
 <h3 align="center">通讯录</h3>
 
-<table border="1" align="center">
-    <tr>
-        <th>好友昵称</th>
-        <th>好友账号</th>
-        <th>性别</th>
-        <th></th>
-    </tr>
-    {{range $key, $friend := .Data.Friends}}
-    <tr>
-        <td>{{$friend.Nickname}}</td>
-        <td><a href="/user/{{$friend.Id}}">{{$friend.Passport}}</a></td>
-        <td>{{if eq $friend.Gender "0"}}未知{{else if eq $friend.Gender "1"}}男{{else}}女{{end}}</td>
-        <td>
-            {{if eq $friend.Status "1"}}
-                等待好友同意
-            {{else if eq $friend.Status "0"}}
-                <button name="agreeBtn" id="agreeBtn-{{$friend.Id}}">同意好友请求</button>
-            {{else}}
-                <a href="/chat?id={{$friend.Id}}">发送消息</a>
-            {{end}}
-        </td>
-    </tr>
-    {{end}}
-</table>
+<div class="container">
+    <div class="row">
+        <div class="col-1"></div>
+        <table class="table table-primary">
+            <thead>
+                <tr>
+                    <th>好友昵称</th>
+                    <th>好友账号</th>
+                    <th>性别</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range $key, $friend := .Data.Friends}}
+                <tr>
+                    <td>{{$friend.Nickname}}</td>
+                    <td><a href="/user/{{$friend.Id}}">{{$friend.Passport}}</a></td>
+                    <td>{{if eq $friend.Gender "0"}}未知{{else if eq $friend.Gender "1"}}男{{else}}女{{end}}</td>
+                    <td>
+                        {{if eq $friend.Status "1"}}
+                        等待好友同意
+                        {{else if eq $friend.Status "0"}}
+                        <button class="btn btn-primary" name="agreeBtn" id="agreeBtn-{{$friend.Id}}">同意好友请求</button>
+                        {{else}}
+                        <a class="btn btn-primary" href="/chat?id={{$friend.Id}}">发送消息</a>
+                        {{end}}
+                    </td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+</div>
 
 <script type="text/javascript">
-    $(document).on("click", ".addFriendBtn", function() {
+    $(document).on("click", ".addFriendBtn", function () {
         var btnId = $(this).attr("id")
         var id = btnId.substring(8)
         $.post(
@@ -44,13 +64,13 @@
             {
                 "id": id
             },
-            function(r, textStatus) {
+            function (r, textStatus) {
                 if (r.code <= 0) {
                     swal({
-                        title:   "添加好友申请发送成功，等待好友同意",
-                        text:    "",
-                        icon:    "success",
-                        timer:   2000,
+                        title: "添加好友申请发送成功，等待好友同意",
+                        text: "",
+                        icon: "success",
+                        timer: 2000,
                         buttons: false
                     }).then((value) => {
                         if (r.redirect != "") {
@@ -61,16 +81,16 @@
                     });
                 } else {
                     swal({
-                        text:   r.message,
-                        icon:   "warning",
+                        text: r.message,
+                        icon: "warning",
                         button: "确定",
                     });
                 }
             }
         )
     })
-    $(function(){
-        $("[name='agreeBtn']").click(function() {
+    $(function () {
+        $("[name='agreeBtn']").click(function () {
             var btnId = event.currentTarget.id
             id = btnId.substring(9)
             $.get(
@@ -78,42 +98,42 @@
                 {
                     "id": id,
                 },
-                function(r, textStatus) {
-                if (r.code <= 0) {
-                    swal({
-                        title:   "添加好友成功",
-                        text:    "可以开始聊天了",
-                        icon:    "success",
-                        timer:   2000,
-                        buttons: false
-                    }).then((value) => {
-                        if (r.redirect != "") {
-                            window.location.href = r.redirect;
-                        } else {
-                            window.location.href = "";
-                        }
-                    });
-                } else {
-                    swal({
-                        text:   r.message,
-                        icon:   "warning",
-                        button: "确定",
-                    });
+                function (r, textStatus) {
+                    if (r.code <= 0) {
+                        swal({
+                            title: "添加好友成功",
+                            text: "可以开始聊天了",
+                            icon: "success",
+                            timer: 2000,
+                            buttons: false
+                        }).then((value) => {
+                            if (r.redirect != "") {
+                                window.location.href = r.redirect;
+                            } else {
+                                window.location.href = "";
+                            }
+                        });
+                    } else {
+                        swal({
+                            text: r.message,
+                            icon: "warning",
+                            button: "确定",
+                        });
+                    }
                 }
-            }
             )
         })
 
-        $("#searchFriendBtn").click(function() {
+        $("#searchFriendBtn").click(function () {
             var msg = $("#searchMsg").val()
             $.get(
                 "/chat/search",
                 {
                     "msg": msg
                 },
-                function(r) {
+                function (r) {
                     $("#searchFriendsRes").html('<h3 align="center">查询结果</h3>')
-                    
+
                     if (r.code <= 0) {
                         var res = '<table border="1" align="center"><tr><th>好友昵称</th><th>好友账号</th><th>性别</th><th></th></tr>'
                         for (let i = 0; i < r.data.length; i++) {
@@ -131,7 +151,7 @@
                                 default:
                                     break;
                             }
-                            res += '<tr><td>'+r.data[i].Nickname+'</td><td>'+r.data[i].Passport+'</td><td>'+gender+'</td><td>'+"<button class='addFriendBtn' id='add-btn-" + r.data[i].Id + "'>添加好友</button><br>"+'</td></tr>'
+                            res += '<tr><td>' + r.data[i].Nickname + '</td><td>' + r.data[i].Passport + '</td><td>' + gender + '</td><td>' + "<button class='addFriendBtn' id='add-btn-" + r.data[i].Id + "'>添加好友</button><br>" + '</td></tr>'
                         }
                         $("#searchFriendsRes").html('<h3 align="center">查询结果</h3>' + res + '</table>')
                     } else {
