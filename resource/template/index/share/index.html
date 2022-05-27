@@ -1,33 +1,53 @@
-<div>
+<div class="container">
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="collapse" id="collapseExample">
+            <div class="d-flex justify-content-center">
+                <textarea class="card card-body" id="copyArea" style="width: 650px;height: 80px"></textarea>
+                <button class="btn btn-primary" onclick="copy()">复制链接</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <div>
     <textarea id="copyArea" style="width: 650px;height: 50px">
     WeShareX......
     </textarea>
     <br>
     <button type="button" onclick="copy()">复制链接</button>
+</div> -->
+<div class="container">
+    <div class="row">
+        <div class="col-1"></div>
+        <table class="table table-primary">
+            <thead>
+                <tr>
+                    <th>名称</th>
+                    <th>分享者</th>
+                    <th>创建时间</th>
+                    <th>失效时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range $key, $share := .Data.sharesMap}}
+                <tr>
+                    <th>{{$share.name}}</th>
+                    <th>{{$share.nickname}}</th>
+                    <th>{{$share.createAt}}</th>
+                    <th>{{$share.expireAt}}</th>
+                    <th>
+                        <button class="btn btn btn-danger" name="cancelBtn" id="cancelBtn-{{$share.id}}">取消分享</button>
+                        <button class="btn btn-success" data-bs-toggle="collapse" data-bs-target="#collapseExample"
+                            aria-expanded="false" aria-controls="collapseExample" name="getLinkBtn"
+                            id="getLinkBtn-{{$share.id}}">获取链接</button>
+                    </th>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
     </div>
-<table border="1">
-    <tr>
-        <th>名称</th>
-        <th>分享者</th>
-        <th>创建时间</th>
-        <th>失效时间</th>
-        <th>操作</th>
-    </tr>
-    
-    {{range $key, $share := .Data.sharesMap}}
-    <tr>
-        <th>{{$share.name}}</th>
-        <th>{{$share.nickname}}</th>
-        <th>{{$share.createAt}}</th>
-        <th>{{$share.expireAt}}</th>
-        <th>
-            <button name="cancelBtn" id="cancelBtn-{{$share.id}}">取消分享</button>
-            | 
-            <button name="getLinkBtn" id="getLinkBtn-{{$share.id}}">获取链接</button>
-        </th>
-    </tr>
-    {{end}}
-</table>
+</div>
 
 <script text="type/javascript">
     function copy() {
@@ -35,19 +55,19 @@
         document.execCommand("Copy")
         alert("复制成功")
     }
-    $(function() {
-        $("[name='cancelBtn']").click(function() {
+    $(function () {
+        $("[name='cancelBtn']").click(function () {
             var id = event.currentTarget.id.substring(10)
             $.get(
                 "/share/cancel",
-                {"id":id},
-                function(r, textStatus) {
+                { "id": id },
+                function (r, textStatus) {
                     if (r.code <= 0) {
                         swal({
-                            title:   "取消分享成功",
-                            text:    "您可以继续操作!",
-                            icon:    "success",
-                            timer:   2000,
+                            title: "取消分享成功",
+                            text: "您可以继续操作!",
+                            icon: "success",
+                            timer: 2000,
                             buttons: false
                         }).then((value) => {
                             if (r.redirect != "") {
@@ -58,23 +78,23 @@
                         });
                     } else {
                         swal({
-                            text:   r.message,
-                            icon:   "warning",
+                            text: r.message,
+                            icon: "warning",
                             button: "确定",
-                        }).then(function() {
+                        }).then(function () {
                             window.location.href = "";
                         });
                     }
                 }
             )
         })
-        $("[name='getLinkBtn']").click(function() {
+        $("[name='getLinkBtn']").click(function () {
             var id = event.currentTarget.id.substring(11)
             $.get(
-                "/share/link?id="+id,
-                function(r, textStatus) {
+                "/share/link?id=" + id,
+                function (r, textStatus) {
                     var link = "链接：http://localhost:8585/" + r.data.Url + " 提取码：" + r.data.Code
-                    $("#copyArea").val(link)
+                    $("#copyArea").html(link)
                 }
             )
         })
