@@ -107,7 +107,7 @@ func (su *sUser) UpdateProfileById(ctx context.Context, input model.UserProfileI
 		// 获取上下文中的 UserId
 		user := Context().Get(ctx).User
 		userId := user.Id
-		_, err := dao.User.Ctx(ctx).OmitEmpty().Data(input).Where(dao.User.Columns().Id, userId).Update()
+		_, err := dao.User.Ctx(ctx).OmitNil().Data(input).Where(dao.User.Columns().Id, userId).Update()
 		// 如果数据库更新成功，则更新session user 的信息
 		if err == nil {
 			sessionUser := Session().GetUser(ctx)

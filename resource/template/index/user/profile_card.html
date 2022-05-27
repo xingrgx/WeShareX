@@ -1,9 +1,19 @@
-<div align="center">
-    <div>资料卡</div><br>
-    <a href="/user/{{.Data.Id}}">
-        <img src="{{.Data.Avatar}}" height="85" width="85">
-    </a><br>
-    昵称：{{.Data.Nickname}}<br>
-    性别：{{.BuildIn.Gender .Data.Gender}}<br>
-    <button>加好友/发消息</button><br>
+<div class="d-flex justify-content-center">
+    <div class="card" style="width: 18rem;">
+        <img src="{{.Data.Avatar}}" class="card-img-top" alt="...">
+        <div class="card-body">
+            <div class="d-flex justify-content-center">
+                <h5 class="card-title">个人资料卡</h5>
+            </div>
+            <div class="d-flex justify-content-center">
+                账号：{{.Data.Passport}}<br>
+                昵称：{{.Data.Nickname}}<br>
+                性别：{{.BuildIn.Gender .Data.Gender}}<br>
+            </div>
+            <div class="d-flex justify-content-center">
+                <a href="#" class="btn btn-primary">加好友</a>
+            </div>
+
+        </div>
+    </div>
 </div>

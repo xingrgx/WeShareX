@@ -1,18 +1,36 @@
 
 {{include "index/profile/menu.html"}}
 
-<div style="background-color:#00ff73;">
-    <h3> 用户邮箱修改页面 </h3>
+<div class="container">
+    <div class="row">
+        <div class="col-4"></div>
+        <form align="center" class="col-4" id="emailForm" action="/profile/email" method="post">
+            <h1 class="h3 mb-3 fw-normal">修改邮箱</h1>
+
+            <div class="form-floating">
+                <input type="email" readonly class="form-control" value="{{.Context.User.Email}}">
+                <label for="floatingInput">旧邮箱</label>
+            </div>
+            <br>
+            <div class="form-floating">
+                <input type="email" name="newEmail" class="form-control">
+                <label for="floatingPassword">新邮箱</label>
+            </div>
+            <br>
+            <button class=" btn btn-lg btn-primary" type="submit">确认修改</button>
+        </form>
+        <div class="col-4"></div>
+    </div>
 </div>
 
-<div align="center">
+<!-- <div align="center">
     <form id="emailForm" method="POST" action="/profile/email">
         邮箱地址：<input type="text" readonly value="{{.Context.User.Email}}"></input><br>
         新邮箱：<input type="text" name="newEmail"></input><br>
         验证码：<input type="text" name="verifyCode"></input><br>
         <button type="submit">确认</button>
     </form>
-</div>
+</div> -->
 
 <script>
     jQuery(function ($) {

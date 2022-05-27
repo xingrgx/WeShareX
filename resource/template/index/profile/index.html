@@ -1,12 +1,57 @@
-
-
 {{include "index/profile/menu.html"}}
 
-<div style="background-color:#00ff2a;">
-    <h3> 用户个人基本资料修改页面 </h3>
+<div class="container">
+    <div class="row">
+        <div class="col-4"></div>
+        <form align="center" class="col-4" id="profileForm" action="/profile" method="post">
+            <h1 class="h3 mb-3 fw-normal">修改基本资料</h1>
+            <div class="form-floating">
+                <input type="text" readonly name="id" value="{{.Context.User.Id}}" class="form-control">
+                <label for="floatingInput">用户ID</label>
+            </div>
+            <br>
+            <div class="form-floating">
+                <input type="text" readonly name="passport" value="{{.Context.User.Passport}}" class="form-control">
+                <label for="floatingInput">账号</label>
+            </div>
+            <br>
+            <div class="form-floating">
+                <input type="text" name="nickname" value="{{.Data.Nickname}}" class="form-control">
+                <label for="floatingInput">昵称</label>
+            </div>
+            <br>
+            <div style="display: flex;">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gender" {{if eq .Data.Gender 0}}checked{{end}} id="gender0"
+                        value="0">
+                    <label class="form-check-label" for="flexRadioDefault0">
+                        未知
+                    </label>
+                </div>
+                &nbsp;
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gender" {{if eq .Data.Gender 1}}checked{{end}} id="gender1"
+                        value="1">
+                    <label class="form-check-label" for="flexRadioDefault1">
+                        男
+                    </label>
+                </div>
+                &nbsp;
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gender" {{if eq .Data.Gender 2}}checked{{end}} id="gender2"
+                        value="2">
+                    <label class="form-check-label" for="flexRadioDefault2">
+                        女
+                    </label>
+                </div>
+            </div>
+            <button class="btn btn-lg btn-primary" type="submit">确认修改</button>
+        </form>
+        <div class="col-4"></div>
+    </div>
 </div>
 
-<div align="center">
+<!-- <div align="center">
     <form id="profileForm" method="POST" action="/profile">
         账号：<input type="text" readonly value="{{.Context.User.Passport}}"><br>
         昵称：<input type="text" name="nickname" value="{{.Data.Nickname}}"><br>
@@ -15,7 +60,8 @@
         女：<input type="radio" name="gender" {{if eq .Data.Gender 2}}checked{{end}} id="gender2" value="2"><br>
         <button type="submit">保存</button>
     </form>
-</div>
+</div> -->
+
 
 <script>
     jQuery(function ($) {
