@@ -1,46 +1,100 @@
-<div align="center">
-    <form id="registerForm" action="/register" method="POST">
-        用户名：<input type="text" name="passport"><br>
-        昵称：<input type="text" name="nickname"><br>
-        密码：<input type="password" name="password"><br>
-        确认密码：<br>
-        邮箱：<input tpye="text" name="email"><br>
-        <button type="submit">注册</button>
-    </form>
-</div>
-
-<script type="text/javascript">
-    jQuery(function($) {
-        $('#registerForm').validate({
-            submitHandler: function(form) {
-                $('button[type=submit]').attr('disabled', 'true');
-                jQuery(form).ajaxSubmit({
-                    dataType: 'json',
-                    success:  function (r, textStatus) {
-                        if (r.code <= 0) {
-                            swal({
-                                title:   "注册成功",
-                                text:    "页面将自动跳转到登录页面",
-                                icon:    "success",
-                                timer:   2000,
-                                buttons: false
-                            }).then((value) => {
-                                if (r.redirect != "") {
-                                    window.location.href = r.redirect;
-                                } else {
-                                    window.location.href = "/login";
-                                }
-                            });
-                        } else {
-                            swal({
-                                text:   r.message,
-                                icon:   "warning",
-                                button: "确定",
-                            });
-                        }
-                    }
+<div class="container">
+    <div class="row">
+      <div class="col-4"></div>
+      <form align="center" class="col-4" id="registerForm" action="/register" method="post">
+        <img class="mb-4" src="../assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+        <h1 class="h3 mb-3 fw-normal">请注册</h1>
+  
+        <div class="form-floating">
+          <input type="text" name="passport" class="form-control" id="floatingInput" placeholder="请输入账户名">
+          <label for="floatingInput">账户名</label>
+        </div>
+        <div class="form-floating">
+          <input type="text" name="nickname" class="form-control" id="floatingNickname" placeholder="请输入昵称">
+          <label for="floatingInput">昵称</label>
+        </div>
+        <div class="form-floating">
+          <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="请输入密码">
+          <label for="floatingPassword">密码</label>
+        </div>
+        <div class="form-floating">
+          <input type="password" name="password2" class="form-control" placeholder="请再次输入密码">
+          <label for="floatingPassword">确认密码</label>
+        </div>
+        <div class="form-floating">
+          <input type="email" name="email" class="form-control" id="floatingEmail" placeholder="请输入邮箱">
+          <label for="floatingInput">邮箱</label>
+        </div>
+        <br>
+        <button class=" btn btn-lg btn-primary" type="submit">注册</button>
+        <p class="mt-5 mb-3 text-muted">&copy; 2017–2022</p>
+      </form>
+      <div class="col-4"></div>
+    </div>
+  </div>
+  
+  <script type="text/javascript">
+    jQuery(function ($) {
+      $('#registerForm').validate({
+        errorElement: 'div',
+        errorClass: 'validation-error-block',
+        focusInvalid: true,
+        rules: {
+          password2: {
+            equalTo: "#floatingPassword"
+          },
+        },
+        messages: {
+          passport: {
+            required: "请输入账号"
+          },
+          password: {
+            required: "请输入密码"
+          },
+          password2: {
+            required: "请确认密码",
+            equalTo: "两次输入的密码不同"
+          },
+          nickname: {
+            required: "请确认昵称"
+          },
+          captcha: {
+            required: "请确认验证码"
+          }
+        },
+        submitHandler: function (form) {
+          $('button[type=submit]').attr('disabled', 'true');
+  
+          let passport = $('[name="passport"]').val();
+          let password = $('[name="password"]').val();
+          jQuery(form).ajaxSubmit({
+            dataType: 'json',
+            success: function (r, textStatus) {
+              if (r.code <= 0) {
+                swal({
+                  title: "注册成功",
+                  text: "页面将自动跳转到登录页面",
+                  icon: "success",
+                  timer: 2000,
+                  buttons: false
+                }).then((value) => {
+                  if (r.redirect != "") {
+                    window.location.href = r.redirect;
+                  } else {
+                    window.location.href = "/";
+                  }
                 });
+              } else {
+                swal({
+                  text: r.message,
+                  icon: "warning",
+                  button: "确定",
+                });
+                $('[name="password"]').val('');
+              }
             }
-        })
+          });
+        }
+      })
     })
-    </script>
+  </script>

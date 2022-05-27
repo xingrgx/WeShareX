@@ -1,7 +1,3 @@
-<div style="background-color:#d32424;">
-    <h3> 上传资源页面 </h3>
-</div>
-
 {{include "index/file/upload.html"}}
 
 <div style="background-color:#5daaddcc;">
@@ -13,14 +9,14 @@
 </div>
 
 <div>
-<button id="createDirBtn">新建文件夹</button> | 
-<span id="disappearBar" hidden>
-    <button name="disBarBtn" id='downloadBarBtn'>下载</button> | 
-    <button id='deleteBarBtn' name="disBarBtn">删除</button> | 
-    <button id='moveBarBtn' name="disBarBtn">移动</button> | 
-    <button id='shareBarBtn' name="disBarBtn">分享</button> |
+<button class="btn btn-primary" id="createDirBtn">新建文件夹</button>
+<span id="disappearBar" style="display: none;">
+    <button class="btn btn-primary" name="disBarBtn" id='downloadBarBtn'>下载</button>
+    <button class="btn btn-primary" id='deleteBarBtn' name="disBarBtn">删除</button>
+    <button class="btn btn-primary" id='moveBarBtn' name="disBarBtn">移动</button>
+    <button class="btn btn-primary" id='shareBarBtn' name="disBarBtn">分享</button>
 </span>
-刷新
+<a class="btn btn-primary" href="/file">刷新</a>
 </div>
 
 <table border="1">

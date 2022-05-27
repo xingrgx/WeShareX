@@ -1,8 +1,29 @@
-<input type="file" name="file" id="files" multiple="multiple"/>
+<div class="container">
+    <div class="row">
+        <div class="col-2"></div>
+        <div class="col-4">
+            <div class="row">
+                <label for="formFile" class="form-label">请选择单个或多个文件</label>
+                <input class="form-control" type="file" name="file" id="files" multiple="multiple">
+                <button class="btn btn-success" id="uploadFileBtn">上传文件</button>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="row">
+                <label for="formFile" class="form-label">请选择文件夹</label>
+                <input class="form-control" type="file" name="file" id="dir" webkitdirectory>
+                <button class="btn btn-success" id="uploadDirBtn">上传文件夹</button>
+            </div>
+        </div>
+        <div class="col-2"></div>
+    </div>
+</div>
+
+<!-- <input type="file" name="file" id="files" multiple="multiple"/>
 <button id="uploadFileBtn">上传文件</button>
 <br>
 <input type="file" name="file" id="dir" webkitdirectory/>
-<button id="uploadDirBtn">上传文件夹</button>
+<button id="uploadDirBtn">上传文件夹</button> -->
 
 
 <script type="text/javascript">
