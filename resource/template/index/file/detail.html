@@ -1,32 +1,46 @@
-<h4>文件详情</h4>
-<table border="1">
-<tr>
-  <th>文件名</th>
-  <td>{{.Data.Name}}</td>
-</tr>
-<tr>
-  <th>文件路径</th></th>
-  <td>{{.Data.Path}}</td>
-</tr>
-<tr>
-  <th>创建时间</th>
-  <td>{{.Data.CreateAt}}</td>
-</tr>
-<tr>
-    <th>修改时间</th>
-    <td>{{.Data.UpdateAt}}</td>
-</tr>
-<tr>
-    <th>文件大小</th>
-    <td>{{.Data.Size}}</td>
-</tr>
-<tr>
-    <th>下载次数</th>
-    <td>{{.Data.Times}}</td>
-</tr>
-<tr>
-    <th>操作</th>
-    <td> 下载 | 预览 | 分享 </td>
-</tr>
-</table>
-
+<div class="container">
+  <h4>文件详情</h4>
+  <div class="row">
+    <div class="col-5"></div>
+    <table class="table table-primary col-1">
+      <tr>
+        <th>文件名</th>
+        <td>{{.Data.Name}}</td>
+      </tr>
+      <tr>
+        <th>文件路径</th>
+        </th>
+        <td>{{.Data.Path}}</td>
+      </tr>
+      <tr>
+        <th>创建时间</th>
+        <td>{{.Data.CreateAt}}</td>
+      </tr>
+      <tr>
+        <th>修改时间</th>
+        <td>{{.Data.UpdateAt}}</td>
+      </tr>
+      <tr>
+        <th>文件大小</th>
+        <td>{{.Data.Size}}</td>
+      </tr>
+      <tr>
+        <th>下载次数</th>
+        <td>{{.Data.Times}}</td>
+      </tr>
+      <tr>
+        <th>操作</th>
+        <td>
+          {{if eq .Data.Dir 1}}
+          <a class="btn btn-outline-primary" href="/zip?fileIds={{.Data.Id}}">下载</a>
+          {{else}}
+          <a class="btn btn-outline-primary" href="/file/download?fileId={{.Data.Id}}">下载</a>
+          {{end}}
+          <a class="btn btn-outline-primary" href="/file/preview?fileId={{.Data.Id}}">预览</a>
+          <a class="btn btn-outline-primary" href="/share/create?fileIds={{.Data.Id}}">分享</a>
+        </td>
+      </tr>
+    </table>
+    <div class="col-5"></div>
+  </div>
+</div>

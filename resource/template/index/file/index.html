@@ -1,80 +1,106 @@
 {{include "index/file/upload.html"}}
 
-<div style="background-color:#5daaddcc;">
-    当前位置
-    {{range $key, $crumb := .BreadCrumbs}}
-       >> <a href="{{$crumb.Url}}">{{$crumb.Name}}</a>
-    {{end}}
-    <input type="hidden" value="{{.Data.currentPathId}}" id="currentPathId"></input>
-</div>
-
-<div>
-<button class="btn btn-primary" id="createDirBtn">新建文件夹</button>
-<span id="disappearBar" style="display: none;">
-    <button class="btn btn-primary" name="disBarBtn" id='downloadBarBtn'>下载</button>
-    <button class="btn btn-primary" id='deleteBarBtn' name="disBarBtn">删除</button>
-    <button class="btn btn-primary" id='moveBarBtn' name="disBarBtn">移动</button>
-    <button class="btn btn-primary" id='shareBarBtn' name="disBarBtn">分享</button>
-</span>
-<a class="btn btn-primary" href="/file">刷新</a>
-</div>
-
-<table border="1">
-    <tr>
-        <th><input id="selectAll" type="checkbox"/>全选/全不选</th>
-        <th>文件名</th>
-        <th>大小</th>
-        <th>修改日期</th>
-        <th>操作</th>
-    </tr>
-    <tr id="newDirPlace">
-        
-    </tr>
-{{range $key, $file := .Data.filesMap}}
-    <tr>
-        <td><input type="checkbox" name="checkbox" id="checkbox-{{$file.id}}"></td>
-        <td>
-            <input hidden name="fileName" id="fileName-{{$file.id}}" type="text" value="{{$file.name}}" class="myinput">
-            {{if eq $file.dir 1}}
-            <a name="fileNameHref" id="fileNameHref-{{$file.id}}" href="file?dirId={{$file.id}}" onclick="refreshCurrentPathId('{{$file.id}}')">{{$file.name}}</a>
-            {{else}}
-            <a name="fileNameHref" id="fileNameHref-{{$file.id}}" href="file/preview?fileId={{$file.id}}">{{$file.name}}</a>
+<div class="row">
+    <div class="col-1"></div>
+    <nav class="col-4 navbar navbar-expand-lg bg-light"
+        style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);"
+        aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">当前位置</li>
+            {{range $key, $crumb := .BreadCrumbs}}
+            <li class="breadcrumb-item"><a href="{{$crumb.Url}}">{{$crumb.Name}}</a></li>
             {{end}}
-            
-        </td>
-        <td>{{$file.size}}</td>
-        <td>{{$file.updateAt}}</td>
-        <td>
-            <button type="button" name="renameBtn" id="renameBtn-{{$file.id}}">重命名</button> |
-            {{if eq $file.dir 1}}
-            <a href="zip?fileIds={{$file.id}}"> 下载 </a>|
-            {{else}}
-            <a href="file/download?fileId={{$file.id}}"> 下载 </a>|
-            {{end}}
-            <button name="deleteBtn" id="deleteBtn-{{$file.id}}">删除</button> |
-            <a href="file/detail?fileId={{$file.id}}">文件详情</a> 
-        </td>
-    </tr>
-    {{end}}
-</table>
+        </ol>
+    </nav>
+    <input type="hidden" value="{{.Data.currentPathId}}" id="currentPathId" />
+    <div class="col-2"></div>
+    <div class="col-4">
+        <button class="btn btn-primary" id="createDirBtn">新建文件夹</button>&nbsp;
+        <span id="disappearBar" style="display: none;">
+            <button class="btn btn-primary" name="disBarBtn" id='downloadBarBtn'>下载</button>
+            <button class="btn btn-primary" id='deleteBarBtn' name="disBarBtn">删除</button>
+            <button class="btn btn-primary" id='moveBarBtn' name="disBarBtn">移动</button>
+            <button class="btn btn-primary" id='shareBarBtn' name="disBarBtn">分享</button>
+        </span>
+        <a class="btn btn-primary" href="/file">刷新</a>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-1"></div>
+        <table class="table table-primary">
+            <thead>
+                <tr>
+                    <th><input id="selectAll" type="checkbox" />全选</th>
+                    <th>文件名</th>
+                    <th>大小</th>
+                    <th>修改日期</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr id="newDirPlace">
 
+                </tr>
+                {{range $key, $file := .Data.filesMap}}
+                <tr>
+                    <td><input type="checkbox" name="checkbox" id="checkbox-{{$file.id}}"></td>
+                    <td>
+                        <input style="display: none;" name="fileName" id="fileName-{{$file.id}}" type="text"
+                            value="{{$file.name}}" class="myinput">
+                        {{if eq $file.dir 1}}
+                        <a name="fileNameHref" id="fileNameHref-{{$file.id}}" href="file?dirId={{$file.id}}"
+                            onclick="refreshCurrentPathId('{{$file.id}}')">{{$file.name}}</a>
+                        {{else}}
+                        <a name="fileNameHref" id="fileNameHref-{{$file.id}}"
+                            href="file/preview?fileId={{$file.id}}">{{$file.name}}</a>
+                        {{end}}
+                    </td>
+                    <td>{{$file.size}}</td>
+                    <td>{{$file.updateAt}}</td>
+                    <td>
+                        <button class="btn btn-outline-primary" type="button" name="renameBtn"
+                            id="renameBtn-{{$file.id}}">重命名</button>
+                        {{if eq $file.dir 1}}
+                        <a class="btn btn-outline-primary" href="zip?fileIds={{$file.id}}"> 下载 </a>
+                        {{else}}
+                        <a class="btn btn-outline-primary" href="file/download?fileId={{$file.id}}"> 下载 </a>
+                        {{end}}
+                        <button class="btn btn-outline-primary" name="deleteBtn" id="deleteBtn-{{$file.id}}">删除</button>
+                        <a class="btn btn-outline-primary" href="file/detail?fileId={{$file.id}}">文件详情</a>
+                    </td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+        <div class="col-1"></div>
+    </div>
+</div>
 <style>
-    a,span {padding:8px; font-size:16px;}
-    div{margin:5px 5px 20px 5px}
+    a,
+    span {
+        padding: 8px;
+        font-size: 16px;
+    }
+
+    div {
+        margin: 5px 5px 20px 5px
+    }
+
     .myinput {
-        outline-style: none ;
-        border: 2px solid rgb(7, 135, 221); 
+        outline-style: none;
+        border: 2px solid rgb(7, 135, 221);
         font-size: 16px;
     }
 </style>
-<div>{{.Data.page}}</div>
+<div align="center">{{.Data.page}}</div>
 
 <script type="text/javascript">
-    $(function(){
-        
-        $("#createDirBtn").click(function() {
+    $(function () {
+
+        $("#createDirBtn").click(function () {
             $("#newDirPlace").html('<td><input type="checkbox"></td><td><input type="text" id="newDirName" class="myinput" ></td></td><td></td><td></td><td></td>')
-            $("#newDirName").blur(function() {
+            $("#newDirName").blur(function () {
                 var name = $("#newDirName").val()
                 var currentPathId = $("#currentPathId").val()
                 $.post(
@@ -83,13 +109,13 @@
                         "name": name,
                         "parentId": currentPathId,
                     },
-                    function(r, textStatus) {
+                    function (r, textStatus) {
                         if (r.code <= 0) {
                             swal({
-                                title:   "新建文件夹成功",
-                                text:    "您可以继续操作!",
-                                icon:    "success",
-                                timer:   2000,
+                                title: "新建文件夹成功",
+                                text: "您可以继续操作!",
+                                icon: "success",
+                                timer: 2000,
                                 buttons: false
                             }).then((value) => {
                                 if (r.redirect != "") {
@@ -100,10 +126,10 @@
                             });
                         } else {
                             swal({
-                                text:   r.message,
-                                icon:   "warning",
+                                text: r.message,
+                                icon: "warning",
                                 button: "确定",
-                            }).then(function() {
+                            }).then(function () {
                                 window.location.href = "";
                             });
                         }
@@ -113,23 +139,23 @@
         })
 
         var fileId, oldName, newName
-        $("[name='renameBtn']").click(function() {
+        $("[name='renameBtn']").click(function () {
             var btnId = event.currentTarget.id
             fileId = btnId.substring(10)
-            oldName = $("#fileName-"+fileId).val()
+            oldName = $("#fileName-" + fileId).val()
             // 在展示当前input前，确保其它input已被隐藏
             $("[name='fileName']").hide()
             $("[name='fileNameHref']").show()
             // 展示当前input
-            $("#fileName-"+fileId).show()
-            $("#fileNameHref-"+fileId).hide()
+            $("#fileName-" + fileId).show()
+            $("#fileNameHref-" + fileId).hide()
         })
-        
-        $("[name='fileName']").blur(function() {
-            newName = $("#fileName-"+fileId).val()
+
+        $("[name='fileName']").blur(function () {
+            newName = $("#fileName-" + fileId).val()
             // 当前input失去焦点后，隐藏之
-            $("#fileNameHref-"+fileId).show()
-            $("#fileName-"+fileId).hide()
+            $("#fileNameHref-" + fileId).show()
+            $("#fileName-" + fileId).hide()
             if (oldName != newName) {
                 $.post(
                     "file/rename",
@@ -137,13 +163,13 @@
                         "fileId": fileId,
                         "newName": newName
                     },
-                    function(r, textStatus) {
+                    function (r, textStatus) {
                         if (r.code <= 0) {
                             swal({
-                                title:   "文件名修改成功",
-                                text:    "您可以继续修改文件名!",
-                                icon:    "success",
-                                timer:   2000,
+                                title: "文件名修改成功",
+                                text: "您可以继续修改文件名!",
+                                icon: "success",
+                                timer: 2000,
                                 buttons: false
                             }).then((value) => {
                                 if (r.redirect != "") {
@@ -154,8 +180,8 @@
                             });
                         } else {
                             swal({
-                                text:   r.message,
-                                icon:   "warning",
+                                text: r.message,
+                                icon: "warning",
                                 button: "确定",
                             });
                         }
@@ -164,7 +190,7 @@
             } else {
                 alert("新旧文件名相同！")
             }
-        
+
         })
 
         function deleteFile(fileId) {
@@ -173,13 +199,13 @@
                 {
                     "fileId": fileId
                 },
-                function(r, textStatus) {
+                function (r, textStatus) {
                     if (r.code <= 0) {
                         swal({
-                            title:   "文件删除成功",
-                            text:    "您可以继续操作!",
-                            icon:    "success",
-                            timer:   2000,
+                            title: "文件删除成功",
+                            text: "您可以继续操作!",
+                            icon: "success",
+                            timer: 2000,
                             buttons: false
                         }).then((value) => {
                             if (r.redirect != "") {
@@ -190,8 +216,8 @@
                         });
                     } else {
                         swal({
-                            text:   r.message,
-                            icon:   "warning",
+                            text: r.message,
+                            icon: "warning",
                             button: "确定",
                         });
                     }
@@ -199,20 +225,20 @@
             )
         }
 
-        $("[name='deleteBtn']").click(function() {
+        $("[name='deleteBtn']").click(function () {
             fileId = event.currentTarget.id.substring(10)
             deleteFile(fileId)
         })
 
         var isAllChecked = $("#selectAll").prop("checked")
-        $("#selectAll").click(function() {
+        $("#selectAll").click(function () {
             if (isAllChecked) {
-                $("[name='checkbox']").each(function() {
+                $("[name='checkbox']").each(function () {
                     this.checked = false
                 })
                 isAllChecked = false
             } else {
-                $("[name='checkbox']").each(function() {
+                $("[name='checkbox']").each(function () {
                     this.checked = true
                 })
                 isAllChecked = true
@@ -225,7 +251,7 @@
             }
         })
 
-        $("[name='checkbox']").click(function() {
+        $("[name='checkbox']").click(function () {
             // 有一个未被选中，则全选失效
             if ($("[name='checkbox']:not(:checked)")[0]) {
                 $("#selectAll").prop("checked", false)
@@ -240,7 +266,7 @@
             }
         })
 
-        $("#deleteBarBtn").click(function() {
+        $("#deleteBarBtn").click(function () {
             var ids = []
             $("[name='checkbox']:checked").each(function () {
                 ids.push(this.id.substring(9))
@@ -250,26 +276,26 @@
             }
         })
 
-        $("#downloadBarBtn").click(function() {
+        $("#downloadBarBtn").click(function () {
             var ids = ""
             $("[name='checkbox']:checked").each(function () {
-                ids += this.id.substring(9)+","
+                ids += this.id.substring(9) + ","
             })
-            window.location.href="/zip?fileIds=" + ids
+            window.location.href = "/zip?fileIds=" + ids
         })
 
-        $("#moveBarBtn").click(function() {
+        $("#moveBarBtn").click(function () {
             var ids = ""
             $("[name='checkbox']:checked").each(function () {
-                ids += this.id.substring(9)+","
+                ids += this.id.substring(9) + ","
             })
-            document.location.href = "/file/move?dir=1&fileIds="+ids
+            document.location.href = "/file/move?dir=1&fileIds=" + ids
         })
 
-        $("#shareBarBtn").click(function() {
+        $("#shareBarBtn").click(function () {
             var ids = ""
             $("[name='checkbox']:checked").each(function () {
-                ids += this.id.substring(9)+","
+                ids += this.id.substring(9) + ","
             })
             document.location.href = "/share/create?fileIds=" + ids
             // var form = document.createElement("form")
