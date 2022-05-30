@@ -199,9 +199,28 @@ func (sf *sFile) DeleteFileByFileIdAndUserId(ctx context.Context, fileId string,
 	return
 }
 
+// DeleteFileByFileIdAndUserId 根据filedId和userId删除文件
+// func (sf *sFile) DeleteFileByFileIdAndUserId(ctx context.Context, fileId string, userId uint) (err error) {
+// 	// 纳入事务管理
+// 	return dao.File.Transaction(ctx, func(ctx context.Context, tx *gdb.TX) error {
+// 		if err := deleteFileFromDisk(ctx, fileId, userId); err != nil {
+// 			return err
+// 		}
+// 		_, err := dao.File.Ctx(ctx).Where(g.Map{
+// 			dao.File.Columns().Id:     fileId,
+// 			dao.File.Columns().UserId: userId,
+// 		}).Delete()
+// 		if err != nil {
+// 			return gerror.New("删除失败，请重试！")
+// 		}
+// 		return err
+// 	})
+// }
+
 func deleteFileFromDisk(ctx context.Context, fileId string, userId uint) (err error) {
 	file, _ := File().GetFileByFileIdAndUserId(ctx, fileId, userId)
-	root := File().GetFilesRoot(ctx)
+	// root := File().GetFilesRoot(ctx)
+	root := "files/"+ gconv.String(userId)+"/root"
 	filePath := "./" + root + file.Path
 	os.Remove(filePath)
 	return
